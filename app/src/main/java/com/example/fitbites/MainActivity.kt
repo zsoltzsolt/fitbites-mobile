@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.fitbites.auth.presentation.LoginScreen
 import com.example.fitbites.ui.theme.ThemeColors
 
 
@@ -59,7 +60,7 @@ fun MainScreen() {
             showSplash = false
         }
     } else {
-        Greeting("John")
+        LoginScreen(onSignInClick = {}, onForgotPasswordClick = {}, onSignUpClick = {})
     }
 }
 
@@ -105,13 +106,6 @@ fun SplashScreen() {
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
 @Preview(showBackground = true)
 @Composable

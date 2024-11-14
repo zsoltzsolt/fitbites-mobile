@@ -37,7 +37,14 @@ val Typography = Typography(
         fontFamily = Poppins,
         fontWeight = FontWeight.Light,
         fontSize = 18.sp
+    ),
+    headlineMedium = TextStyle(
+        fontFamily = Poppins,
+        fontWeight = FontWeight.Light,
+        fontSize = 10.sp
     )
+
+
     /* Other default text styles to override
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,

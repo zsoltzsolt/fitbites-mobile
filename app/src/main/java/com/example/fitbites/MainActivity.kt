@@ -1,5 +1,6 @@
 package com.example.fitbites
 
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -107,9 +108,22 @@ fun SplashScreen() {
 }
 
 
-@Preview(showBackground = true)
+
+@Preview(
+    name = "Light Mode",
+    showBackground = true,
+    showSystemUi = true,
+    uiMode = Configuration.UI_MODE_NIGHT_NO
+)
+@Preview(
+    name = "Dark Mode",
+    showBackground = true,
+    showSystemUi = true,
+    uiMode = Configuration.UI_MODE_NIGHT_YES
+)
 @Composable
-fun PreviewSplashScreen() {
+fun PreviewSplashScreenDark() {
     SplashScreen()
 }
+
 

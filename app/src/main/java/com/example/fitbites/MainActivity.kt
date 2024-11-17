@@ -35,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fitbites.auth.presentation.LoginScreen
+import com.example.fitbites.auth.presentation.SignUpScreen
 import com.example.fitbites.ui.theme.ThemeColors
 
 
@@ -61,7 +62,7 @@ fun MainScreen() {
             showSplash = false
         }
     } else {
-        LoginScreen(onSignInClick = {}, onForgotPasswordClick = {}, onSignUpClick = {})
+        SignUpScreen(onSignInClick = {}, onForgotPasswordClick = {}, onSignUpClick = {})
     }
 }
 

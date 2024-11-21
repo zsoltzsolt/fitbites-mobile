@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.fitbites.auth.presentation.LoginScreen
 import com.example.fitbites.auth.presentation.SignUpScreen
+import com.example.fitbites.navigation.AppNavHost
 import com.example.fitbites.ui.theme.ThemeColors
 
 
@@ -45,86 +46,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FitbitesmobileTheme {
-                MainScreen()
+                AppNavHost()
             }
         }
     }
 }
 
-@Composable
-fun MainScreen() {
-    var showSplash by remember { mutableStateOf(true) }
-
-    if (showSplash) {
-        SplashScreen()
-        LaunchedEffect(Unit) {
-            kotlinx.coroutines.delay(2000)
-            showSplash = false
-        }
-    } else {
-        SignUpScreen(onSignInClick = {}, onForgotPasswordClick = {}, onSignUpClick = {})
-    }
-}
-
-@Composable
-fun SplashScreen() {
-    val screenHeight = LocalConfiguration.current.screenHeightDp
-    val screenWidth = LocalConfiguration.current.screenWidthDp
-    val iconSize = screenWidth * 0.65f
-    val verticalOffset = screenHeight * 0.1f
-
-    FitbitesmobileTheme(dynamicColor = false) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = "Logo",
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .size(iconSize.dp)
-                    .offset(y = -verticalOffset.dp)
-            )
-
-            Text(
-                text = "FitBites",
-                color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.headlineLarge,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .offset(y = -verticalOffset.dp)
-            )
-            Text(
-                text = "Version 1.0",
-                color = MaterialTheme.colorScheme.onSecondary,
-                style = MaterialTheme.typography.headlineSmall ,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .offset(y = -verticalOffset.dp + 20.dp)
-            )
-        }
-    }
-}
-
-
-
-@Preview(
-    name = "Light Mode",
-    showBackground = true,
-    showSystemUi = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO
-)
-@Preview(
-    name = "Dark Mode",
-    showBackground = true,
-    showSystemUi = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-fun PreviewSplashScreenDark() {
-    SplashScreen()
-}
 
 

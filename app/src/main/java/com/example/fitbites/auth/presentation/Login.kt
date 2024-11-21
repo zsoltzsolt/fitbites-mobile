@@ -38,7 +38,10 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.compose.rememberNavController
 import com.example.fitbites.SplashScreen
+import com.example.fitbites.navigation.ROUTE_LOGIN
+import com.example.fitbites.navigation.ROUTE_SIGNUP
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
 import com.example.fitbites.ui.theme.ThemeColors
 
@@ -52,9 +55,11 @@ fun LoginScreen(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+
     val screenHeight = LocalConfiguration.current.screenHeightDp
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val iconSize = screenWidth * 0.45f
+
     FitbitesmobileTheme(dynamicColor = false) {
         Column(
             modifier = Modifier

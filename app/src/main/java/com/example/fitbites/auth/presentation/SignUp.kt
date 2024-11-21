@@ -76,7 +76,6 @@ fun CustomSizedCheckbox(
 @Composable
 fun SignUpScreen(
     onSignUpClick: () -> Unit,
-    onForgotPasswordClick: () -> Unit,
     onSignInClick: () -> Unit
 ) {
     var name by remember { mutableStateOf("") }
@@ -376,6 +375,6 @@ fun SignUpScreen(
 )
 @Composable
 fun PreviewSignUp() {
-    SignUpScreen(onSignUpClick = {}, onForgotPasswordClick = {}, onSignInClick = {})
+    SignUpScreen(onSignUpClick = {}, onSignInClick = {})
 }
 

@@ -1,7 +1,5 @@
 package com.example.fitbites.ui.theme
 
-import android.os.Bundle
-import androidx.compose.material3.TextField
 import com.example.fitbites.R
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

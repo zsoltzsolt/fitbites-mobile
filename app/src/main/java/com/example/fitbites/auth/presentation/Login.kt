@@ -1,6 +1,7 @@
 package com.example.fitbites.auth.presentation
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -38,6 +39,7 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.fitbites.SplashScreen
 import com.example.fitbites.navigation.ROUTE_LOGIN
@@ -48,6 +50,7 @@ import com.example.fitbites.ui.theme.ThemeColors
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
+    authViewModel: AuthViewModel = hiltViewModel(),
     onSignInClick: () -> Unit,
     onForgotPasswordClick: () -> Unit,
     onSignUpClick: () -> Unit
@@ -59,6 +62,23 @@ fun LoginScreen(
     val screenHeight = LocalConfiguration.current.screenHeightDp
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val iconSize = screenWidth * 0.45f
+
+    val isUserAuthenticated = authViewModel.isUserAuthenticatedState.value
+    LaunchedEffect(Unit) {
+        if (isUserAuthenticated) {
+            // navController.navigate(BottomNavItem.UserList.fullRoute)
+        }
+    }
+
+    //Sign In Navigate
+    val isUserSignIn = authViewModel.isUserSignInState.value
+    LaunchedEffect(key1 = isUserSignIn) {
+        if (isUserSignIn) {
+            // keyboardController.hide()
+            // navController.navigate(BottomNavItem.Profile.fullRoute)
+            Log.d("Auth", "Loged in")
+        }
+    }
 
     FitbitesmobileTheme(dynamicColor = false) {
         Column(
@@ -165,7 +185,9 @@ fun LoginScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = onSignInClick,
+                onClick = {
+                    authViewModel.signIn(email!!, password!!)
+                },
                 colors = ButtonDefaults.buttonColors(
                     Color.Transparent
                 ),

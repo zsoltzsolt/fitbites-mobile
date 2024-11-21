@@ -38,8 +38,10 @@ import com.example.fitbites.auth.presentation.LoginScreen
 import com.example.fitbites.auth.presentation.SignUpScreen
 import com.example.fitbites.navigation.AppNavHost
 import com.example.fitbites.ui.theme.ThemeColors
+import com.google.firebase.FirebaseApp
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

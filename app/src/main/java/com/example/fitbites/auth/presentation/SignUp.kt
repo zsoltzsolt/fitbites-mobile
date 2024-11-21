@@ -1,6 +1,7 @@
 package com.example.fitbites.auth.presentation
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -46,35 +47,16 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.fitbites.SplashScreen
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
 import com.example.fitbites.ui.theme.ThemeColors
 
-@Composable
-fun CustomSizedCheckbox(
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-    size: Dp = 10.dp // Custom size for checkbox
-) {
-    Box(
-        modifier = Modifier
-            .size(size)
-    ) {
-        Checkbox(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-            modifier = Modifier.matchParentSize(),  // Fill the entire Box with Checkbox
-            colors = CheckboxDefaults.colors(
-                checkedColor = MaterialTheme.colorScheme.primary,
-                uncheckedColor = Color.Gray
-            )
-        )
-    }
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpScreen(
+    authViewModel: AuthViewModel = hiltViewModel(),
     onSignUpClick: () -> Unit,
     onSignInClick: () -> Unit
 ) {
@@ -87,6 +69,14 @@ fun SignUpScreen(
     val screenHeight = LocalConfiguration.current.screenHeightDp
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val iconSize = screenWidth * 0.45f
+
+    val isUserSignUp = authViewModel.isUserSignUpState.value
+    LaunchedEffect(key1 = isUserSignUp) {
+        if (isUserSignUp) {
+            Log.e("Auth", "Crated account")
+        }
+    }
+
     FitbitesmobileTheme(dynamicColor = false) {
         Column(
             modifier = Modifier
@@ -208,7 +198,9 @@ fun SignUpScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 5.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 5.dp),
                 horizontalArrangement = Arrangement.Absolute.Left
             ) {
                 Box(
@@ -269,7 +261,9 @@ fun SignUpScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = onSignUpClick,
+                onClick = {
+                    authViewModel.signUp(email!!, password!!)
+                },
                 colors = ButtonDefaults.buttonColors(
                     Color.Transparent
                 ),

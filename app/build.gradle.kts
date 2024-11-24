@@ -54,6 +54,8 @@ dependencies {
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.android.gms:play-services-auth:20.6.0")
+
 
     // Arrow
     implementation("io.arrow-kt:arrow-core:1.2.0")

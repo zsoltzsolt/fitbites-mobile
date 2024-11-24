@@ -5,7 +5,9 @@ import com.example.fitbites.domain.auth.repository.AuthRepository
 import com.example.fitbites.domain.auth.usecase.AuthUseCases
 import com.example.fitbites.domain.auth.usecase.IsUserAuthenticated
 import com.example.fitbites.domain.auth.usecase.SignIn
+import com.example.fitbites.domain.auth.usecase.SignInWithGoogle
 import com.example.fitbites.domain.auth.usecase.SignUp
+import com.example.fitbites.domain.auth.usecase.SignUpWithGoogle
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -31,7 +33,9 @@ object AppModule {
     fun provideAuthScreenUseCase(authRepository: AuthRepository) = AuthUseCases(
         isUserAuthenticated = IsUserAuthenticated(authRepository),
         signIn = SignIn(authRepository),
-        signUp = SignUp(authRepository)
+        signUp = SignUp(authRepository),
+        signUpWithGoogle = SignUpWithGoogle(authRepository),
+        signInWithGoogle = SignInWithGoogle(authRepository)
     )
 
 }

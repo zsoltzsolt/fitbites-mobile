@@ -1,7 +1,10 @@
 package com.example.fitbites.presentation.auth
 
+import android.app.Activity
 import android.content.res.Configuration
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,10 +39,14 @@ import androidx.compose.ui.graphics.Brush
 import com.example.fitbites.R
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.fitbites.presentation.components.*
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,6 +61,34 @@ fun SignUpScreen(
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var checked by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val googleSignInClient = remember {
+        GoogleSignIn.getClient(
+            context,
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("643971702076-cfrpevceeh7lb5isojf2kl7tv8ea22sq.apps.googleusercontent.com")
+                .requestEmail()
+                .build()
+        )
+    }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                account?.idToken?.let { idToken ->
+                    authViewModel.signUpWithGoogle(idToken)
+                }
+            } catch (e: ApiException) {
+                Log.e("GoogleSignIn", "Google sign-in failed", e)
+            }
+        }
+    }
+
 
     val isUserSignUp = authViewModel.isUserSignUpState.value
     LaunchedEffect(key1 = isUserSignUp) {
@@ -185,6 +220,8 @@ fun SignUpScreen(
             SocialMediaSection(
                 onGoogleAuth = {
                     Log.d("SocialAuth", "Google icon clicked")
+                    val signInIntent = googleSignInClient.signInIntent
+                    launcher.launch(signInIntent)
                 },
                 onFacebookAuth = {
                     Log.d("SocialAuth", "Facebook icon clicked")
@@ -206,6 +243,7 @@ fun SignUpScreen(
         }
     }
 }
+
 
 
 

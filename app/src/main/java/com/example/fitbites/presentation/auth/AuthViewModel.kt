@@ -1,6 +1,8 @@
 package com.example.fitbites.presentation.auth
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,7 +28,25 @@ class AuthViewModel @Inject constructor(
         isUserAuthenticated()
     }
 
-    fun signIn(email: String, password: String) {
+    fun signInWithGoogle(idToken: String) {
+        viewModelScope.launch {
+            authUseCases.signInWithGoogle(idToken).collect { response ->
+                when (response) {
+                    is Response.Loading -> { /* Show loading indicator */ }
+                    is Response.Success -> {
+                        isUserSignInState.value = response.data
+                        // Navigate to the next screen or update UI based on successful sign-in
+                    }
+                    is Response.Error -> {
+                        // Handle the error
+                    }
+                }
+            }
+        }
+    }
+
+
+    fun signIn(email: String, password: String, context: Context) {
         viewModelScope.launch {
             authUseCases.signIn(email, password).collect { response ->
                 when (response) {
@@ -40,6 +60,26 @@ class AuthViewModel @Inject constructor(
 
                     is Response.Error -> {
                         // toastMessage.value = "Login Failed"
+                        Toast.makeText(context, "Not ok", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+    fun signUpWithGoogle(idToken: String) {
+        viewModelScope.launch {
+            authUseCases.signUpWithGoogle(idToken).collect { response: Response<Boolean> ->
+                when (response) {
+                    is Response.Loading -> {
+                        // Show loading spinner
+                    }
+                    is Response.Success -> {
+                        // Handle success (navigate to next screen, update UI)
+                        isUserSignInState.value = response.data
+                    }
+                    is Response.Error -> {
+                        // Handle error (display a toast or message)
                     }
                 }
             }

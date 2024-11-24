@@ -3,6 +3,7 @@ package com.example.fitbites.repository.auth
 import com.example.fitbites.domain.auth.repository.AuthRepository
 import com.example.fitbites.utils.Response
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -77,4 +78,36 @@ class AuthRepositoryImpl @Inject constructor(
                 cancel()
             }
         }
+
+    override suspend fun signUpWithGoogle(idToken: String): Flow<Response<Boolean>> = flow {
+        try {
+            emit(Response.Loading)
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            val authResult = auth.signInWithCredential(credential).await()
+            if (authResult.user != null) {
+                emit(Response.Success(true))
+            } else {
+                emit(Response.Success(false))
+            }
+        } catch (e: Exception) {
+            emit(Response.Error(e.message ?: "Error"))
+        }
+    }
+
+    override suspend fun signInWithGoogle(idToken: String): Flow<Response<Boolean>> = flow {
+        try {
+            emit(Response.Loading)
+            val credential = GoogleAuthProvider.getCredential(idToken, null)
+            val authResult = auth.signInWithCredential(credential).await()
+            if (authResult.user != null) {
+                emit(Response.Success(true))
+            } else {
+                emit(Response.Success(false))
+            }
+        } catch (e: Exception) {
+            emit(Response.Error(e.message ?: "Error signing in with Google"))
+        }
+    }
+
+
 }

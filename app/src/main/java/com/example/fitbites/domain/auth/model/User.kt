@@ -1,4 +1,4 @@
-package com.example.fitbites.auth.domain.model
+package com.example.fitbites.domain.auth.model
 
 import java.util.UUID
 

@@ -1,4 +1,4 @@
-package com.example.fitbites.auth.presentation
+package com.example.fitbites.presentation.auth
 
 import android.content.res.Configuration
 import android.util.Log
@@ -40,17 +40,11 @@ import androidx.compose.ui.graphics.Brush
 import com.example.fitbites.R
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.fitbites.SplashScreen
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
-import com.example.fitbites.ui.theme.ThemeColors
 
 
 @OptIn(ExperimentalMaterial3Api::class)

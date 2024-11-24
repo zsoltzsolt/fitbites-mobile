@@ -6,9 +6,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.fitbites.SplashScreen
-import com.example.fitbites.auth.presentation.LoginScreen
-import com.example.fitbites.auth.presentation.SignUpScreen
+import com.example.fitbites.presentation.splash.SplashScreen
+import com.example.fitbites.presentation.auth.LoginScreen
+import com.example.fitbites.presentation.auth.SignUpScreen
+import com.example.fitbites.presentation.dashboard.Dashboard
 
 @Composable
 fun AppNavHost(
@@ -30,6 +31,7 @@ fun AppNavHost(
         }
         composable(ROUTE_LOGIN) {
             LoginScreen(
+                navController = navController,
                 onSignInClick = { },
                 onForgotPasswordClick = {  },
                 onSignUpClick = {
@@ -46,6 +48,10 @@ fun AppNavHost(
                     }
                 }
             )
+        }
+
+        composable(ROUTE_DASHBOARD) {
+            Dashboard()
         }
     }
 }

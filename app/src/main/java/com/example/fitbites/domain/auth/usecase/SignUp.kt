@@ -1,6 +1,6 @@
-package com.example.fitbites.auth.domain.usecase
+package com.example.fitbites.domain.auth.usecase
 
-import com.example.fitbites.auth.domain.repository.AuthRepository
+import com.example.fitbites.domain.auth.repository.AuthRepository
 
 class SignUp(
     private val authScreenRepository: AuthRepository

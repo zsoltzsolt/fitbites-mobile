@@ -1,4 +1,4 @@
-package com.example.fitbites.auth.domain.repository
+package com.example.fitbites.domain.auth.repository
 
 import arrow.core.Either
 import com.example.fitbites.utils.Response

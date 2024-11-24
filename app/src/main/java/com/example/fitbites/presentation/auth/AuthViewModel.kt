@@ -1,14 +1,12 @@
-package com.example.fitbites.auth.presentation
+package com.example.fitbites.presentation.auth
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fitbites.auth.domain.repository.AuthRepository
-import com.example.fitbites.auth.domain.usecase.AuthUseCases
+import com.example.fitbites.domain.auth.usecase.AuthUseCases
 import com.example.fitbites.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,10 +32,12 @@ class AuthViewModel @Inject constructor(
                 when (response) {
                     is Response.Loading -> {
                     }
+
                     is Response.Success -> {
                         isUserSignInState.value = response.data
                         // toastMessage.value = "Login Successful"
                     }
+
                     is Response.Error -> {
                         // toastMessage.value = "Login Failed"
                     }

@@ -1,4 +1,4 @@
-package com.example.fitbites.auth.domain.usecase
+package com.example.fitbites.domain.auth.usecase
 
 data class AuthUseCases(
     val isUserAuthenticated: IsUserAuthenticated,

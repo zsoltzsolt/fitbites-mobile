@@ -1,8 +1,7 @@
-package com.example.fitbites.auth.data.repository
+package com.example.fitbites.repository.auth
 
-import com.example.fitbites.auth.domain.repository.AuthRepository
+import com.example.fitbites.domain.auth.repository.AuthRepository
 import com.example.fitbites.utils.Response
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose

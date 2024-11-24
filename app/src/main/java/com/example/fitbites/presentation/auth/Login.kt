@@ -1,6 +1,5 @@
-package com.example.fitbites.auth.presentation
+package com.example.fitbites.presentation.auth
 
-import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -29,7 +28,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.graphics.Brush
@@ -40,17 +38,15 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.compose.rememberNavController
-import com.example.fitbites.SplashScreen
-import com.example.fitbites.navigation.ROUTE_LOGIN
-import com.example.fitbites.navigation.ROUTE_SIGNUP
+import androidx.navigation.NavController
+import com.example.fitbites.navigation.ROUTE_DASHBOARD
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
-import com.example.fitbites.ui.theme.ThemeColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     authViewModel: AuthViewModel = hiltViewModel(),
+    navController: NavController,
     onSignInClick: () -> Unit,
     onForgotPasswordClick: () -> Unit,
     onSignUpClick: () -> Unit
@@ -66,16 +62,16 @@ fun LoginScreen(
     val isUserAuthenticated = authViewModel.isUserAuthenticatedState.value
     LaunchedEffect(Unit) {
         if (isUserAuthenticated) {
-            // navController.navigate(BottomNavItem.UserList.fullRoute)
+            navController.navigate(ROUTE_DASHBOARD)
         }
     }
 
-    //Sign In Navigate
     val isUserSignIn = authViewModel.isUserSignInState.value
     LaunchedEffect(key1 = isUserSignIn) {
         if (isUserSignIn) {
             // keyboardController.hide()
             // navController.navigate(BottomNavItem.Profile.fullRoute)
+            navController.navigate(ROUTE_DASHBOARD)
             Log.d("Auth", "Loged in")
         }
     }
@@ -126,21 +122,24 @@ fun LoginScreen(
                 shape = RoundedCornerShape(10.dp),
                 label = {
                     Text(
-                        text = stringResource(R.string.enter_your_email),
-                        color = Color.Gray
+                        text = stringResource(R.string.enter_your_email)
                     )
                 },
                 trailingIcon = {
                     Icon(
                         Icons.Default.Email,
-                        contentDescription = stringResource(R.string.email_icon),
-                        tint = Color.Gray
+                        contentDescription = stringResource(R.string.email_icon)
                     )
                 },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.Gray,
+                    focusedBorderColor = Color(0xFF16DB16),
                     unfocusedBorderColor = Color.Gray,
-                    containerColor = Color.White
+                    containerColor = Color.White,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    focusedLabelColor = Color(0xFF16DB16),
+                    focusedTrailingIconColor = Color(0xFF16DB16),
+                    unfocusedTrailingIconColor = Color.Gray
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -158,15 +157,19 @@ fun LoginScreen(
                     Icon(
                         imageVector = icon,
                         contentDescription = stringResource(R.string.toggle_password_visibility),
-                        tint = Color.Gray,
                         modifier = Modifier.clickable { passwordVisible = !passwordVisible }
                     )
                 },
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.Gray,
+                    focusedBorderColor = Color(0xFF16DB16),
                     unfocusedBorderColor = Color.Gray,
-                    containerColor = Color.White
+                    containerColor = Color.White,
+                    focusedTextColor = Color.Black,
+                    unfocusedTextColor = Color.Black,
+                    focusedLabelColor = Color(0xFF16DB16),
+                    focusedTrailingIconColor = Color(0xFF16DB16),
+                    unfocusedTrailingIconColor = Color.Gray
                 ),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -279,20 +282,6 @@ fun LoginScreen(
     }
 }
 
-@Preview(
-    name = "Light Mode",
-    showBackground = true,
-    showSystemUi = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO
-)
-@Preview(
-    name = "Dark Mode",
-    showBackground = true,
-    showSystemUi = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-fun PreviewSplashScreen() {
-    LoginScreen(onSignInClick = {}, onForgotPasswordClick = {}, onSignUpClick = {})
-}
+
+
 

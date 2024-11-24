@@ -1,4 +1,4 @@
-package com.example.fitbites
+package com.example.fitbites.presentation.splash
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
@@ -17,7 +17,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.fitbites.R
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
+import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(onTimeout: () -> Unit) {
@@ -27,7 +29,7 @@ fun SplashScreen(onTimeout: () -> Unit) {
     val verticalOffset = screenHeight * 0.1f
 
     LaunchedEffect(Unit) {
-        kotlinx.coroutines.delay(2000)
+        delay(2000)
         onTimeout()
     }
 

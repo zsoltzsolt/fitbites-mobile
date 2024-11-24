@@ -20,9 +20,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,16 +32,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.graphics.Brush
 import com.example.fitbites.R
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.fitbites.presentation.components.*
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
 
 
@@ -59,10 +54,6 @@ fun SignUpScreen(
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var checked by remember { mutableStateOf(false) }
-
-    val screenHeight = LocalConfiguration.current.screenHeightDp
-    val screenWidth = LocalConfiguration.current.screenWidthDp
-    val iconSize = screenWidth * 0.45f
 
     val isUserSignUp = authViewModel.isUserSignUpState.value
     LaunchedEffect(key1 = isUserSignUp) {
@@ -82,111 +73,38 @@ fun SignUpScreen(
         ) {
             Spacer(modifier = Modifier.height(10.dp))
 
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = stringResource(R.string.logo),
-                modifier = Modifier.size(iconSize.dp)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = "Get Started",
-                style = TextStyle(
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = 32.sp,
-                    fontWeight = FontWeight.Bold
-                ),
-                textAlign = TextAlign.Center
-            )
-
-            Text(
-                text = "by creating a free account.",
-                style = TextStyle(
-                    color = Color.Gray,
-                    fontSize = 14.sp
-                ),
-                textAlign = TextAlign.Center
+            AuthHeader(
+                title = stringResource(R.string.get_started),
+                subtitle = stringResource(R.string.by_creating_a_free_account)
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            OutlinedTextField(
+            AuthTextField(
                 value = name,
                 onValueChange = { name = it },
-                shape = RoundedCornerShape(10.dp),
-                label = {
-                    Text(
-                        text = "Full name",
-                        color = Color.Gray
-                    )
-                },
-                trailingIcon = {
-                    Icon(
-                        Icons.Default.Person,
-                        contentDescription = stringResource(R.string.email_icon),
-                        tint = Color.Gray
-                    )
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.Gray,
-                    unfocusedBorderColor = Color.Gray,
-                    containerColor = Color.White
-                ),
-                modifier = Modifier.fillMaxWidth()
+                label = "Full name",
+                trailingIcon = { Icon(Icons.Default.Person, contentDescription = "Name Icon") }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(
+            AuthTextField(
                 value = email,
                 onValueChange = { email = it },
-                shape = RoundedCornerShape(10.dp),
-                label = {
-                    Text(
-                        text = "Email",
-                        color = Color.Gray
-                    )
-                },
-                trailingIcon = {
-                    Icon(
-                        Icons.Default.Email,
-                        contentDescription = stringResource(R.string.email_icon),
-                        tint = Color.Gray
-                    )
-                },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.Gray,
-                    unfocusedBorderColor = Color.Gray,
-                    containerColor = Color.White
-                ),
-                modifier = Modifier.fillMaxWidth()
+                label = "Email",
+                trailingIcon = { Icon(Icons.Default.Email, contentDescription = "Email Icon") }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedTextField(
+            AuthTextField(
                 value = password,
                 onValueChange = { password = it },
-                shape = RoundedCornerShape(10.dp),
-                label = { Text(text = "Password", color = Color.Gray) },
-                trailingIcon = {
-                    val icon =
-                        if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = stringResource(R.string.toggle_password_visibility),
-                        tint = Color.Gray,
-                        modifier = Modifier.clickable { passwordVisible = !passwordVisible }
-                    )
-                },
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.Gray,
-                    unfocusedBorderColor = Color.Gray,
-                    containerColor = Color.White
-                ),
-                modifier = Modifier.fillMaxWidth()
+                label = "Password",
+                isPassword = true,
+                isPasswordVisible = passwordVisible,
+                onPasswordVisibilityChange = { passwordVisible = !passwordVisible }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -254,115 +172,40 @@ fun SignUpScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            Button(
+            GradientButton(
+                text = "Sign Up",
                 onClick = {
-                    authViewModel.signUp(email!!, password!!)
+                    authViewModel.signUp(email, password)
                 },
-                colors = ButtonDefaults.buttonColors(
-                    Color.Transparent
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-                    .padding(horizontal = 30.dp)
-                    .background(
-                        brush = Brush.horizontalGradient(
-                            colors = listOf(
-                                Color(0xFF32CD32),
-                                Color(0xFF228B22)
-                            )
-                        ),
-                        shape = RoundedCornerShape(50)
-                    )
-            ) {
-                Text(text = "Sign Up", color = Color.White, fontSize = 18.sp)
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 30.dp)
-            ) {
-                Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.weight(1f))
-                Text(
-                    text = "or sign up with",
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    fontSize = 14.sp,
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
-                Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.weight(1f))
-            }
+                modifier = Modifier.padding(horizontal = 30.dp)
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(
-                    painter = painterResource(id = R.drawable.google), // Replace with your Google icon resource
-                    contentDescription = stringResource(R.string.google),
-                    modifier = Modifier.size(40.dp),
-                    tint = Color.Unspecified
-                )
-
-                Icon(
-                    painter = painterResource(id = R.drawable.facebook), // Replace with your Facebook icon resource
-                    contentDescription = stringResource(R.string.facebook),
-                    modifier = Modifier.size(40.dp),
-                    tint = Color.Unspecified
-                )
-
-                Icon(
-                    painter = painterResource(id = R.drawable.apple), // Replace with your Apple icon resource
-                    contentDescription = stringResource(R.string.apple),
-                    modifier = Modifier.size(40.dp),
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
-            }
+            SocialMediaSection(
+                onGoogleAuth = {
+                    Log.d("SocialAuth", "Google icon clicked")
+                },
+                onFacebookAuth = {
+                    Log.d("SocialAuth", "Facebook icon clicked")
+                },
+                onAppleAuth = {
+                    Log.d("SocialAuth", "Apple icon clicked")
+                },
+                text = "or sign up with"
+            )
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Row(
-                modifier = Modifier
-                    .fillMaxHeight()
-            ) {
-                Text(
-                    text = "Already a member? ",
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    fontSize = 14.sp
-                )
-                Text(
-                    text = "Sign in",
-                    color = Color.Green,
-                    fontSize = 14.sp,
-                    modifier = Modifier
-                        .clickable { onSignInClick() }
-                        .fillMaxHeight()
-                        .padding(bottom = (screenHeight * 0.05).dp)
-                )
-            }
+            AuthFooter(
+                message = "Already have an account? ",
+                actionText = "Sign in",
+                onActionClick = { onSignInClick() }
+            )
+
         }
     }
 }
 
-@Preview(
-    name = "Light Mode",
-    showBackground = true,
-    showSystemUi = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO
-)
-@Preview(
-    name = "Dark Mode",
-    showBackground = true,
-    showSystemUi = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-fun PreviewSignUp() {
-    SignUpScreen(onSignUpClick = {}, onSignInClick = {})
-}
+
 

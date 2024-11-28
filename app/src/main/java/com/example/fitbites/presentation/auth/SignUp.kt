@@ -210,7 +210,7 @@ fun SignUpScreen(
             GradientButton(
                 text = "Sign Up",
                 onClick = {
-                    authViewModel.signUp(email, password)
+                    authViewModel.signUp(email, password, context)
                 },
                 modifier = Modifier.padding(horizontal = 30.dp)
             )

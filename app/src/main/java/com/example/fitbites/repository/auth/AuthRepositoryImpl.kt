@@ -109,5 +109,14 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun signOut(): Flow<Response<Boolean>> = flow {
+        try {
+            emit(Response.Loading)
+            auth.signOut()
+            emit(Response.Success(true))
+        } catch(e: Exception) {
+            emit(Response.Error(e.message ?: "Error signing out"))
+        }
+    }
 
 }

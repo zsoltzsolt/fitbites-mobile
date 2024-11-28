@@ -51,7 +51,9 @@ fun AppNavHost(
         }
 
         composable(ROUTE_DASHBOARD) {
-            Dashboard()
+            Dashboard(
+                navController = navController
+            )
         }
     }
 }

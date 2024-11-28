@@ -6,6 +6,7 @@ import com.example.fitbites.domain.auth.usecase.AuthUseCases
 import com.example.fitbites.domain.auth.usecase.IsUserAuthenticated
 import com.example.fitbites.domain.auth.usecase.SignIn
 import com.example.fitbites.domain.auth.usecase.SignInWithGoogle
+import com.example.fitbites.domain.auth.usecase.SignOut
 import com.example.fitbites.domain.auth.usecase.SignUp
 import com.example.fitbites.domain.auth.usecase.SignUpWithGoogle
 import com.google.firebase.auth.FirebaseAuth
@@ -35,7 +36,8 @@ object AppModule {
         signIn = SignIn(authRepository),
         signUp = SignUp(authRepository),
         signUpWithGoogle = SignUpWithGoogle(authRepository),
-        signInWithGoogle = SignInWithGoogle(authRepository)
+        signInWithGoogle = SignInWithGoogle(authRepository),
+        signOut = SignOut(authRepository)
     )
 
 }

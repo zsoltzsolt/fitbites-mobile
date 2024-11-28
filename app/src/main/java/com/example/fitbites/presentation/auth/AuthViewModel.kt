@@ -32,10 +32,9 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             authUseCases.signInWithGoogle(idToken).collect { response ->
                 when (response) {
-                    is Response.Loading -> { /* Show loading indicator */ }
+                    is Response.Loading -> {  }
                     is Response.Success -> {
                         isUserSignInState.value = response.data
-                        // Navigate to the next screen or update UI based on successful sign-in
                     }
                     is Response.Error -> {
                         // Handle the error
@@ -55,12 +54,10 @@ class AuthViewModel @Inject constructor(
 
                     is Response.Success -> {
                         isUserSignInState.value = response.data
-                        // toastMessage.value = "Login Successful"
                     }
 
                     is Response.Error -> {
-                        // toastMessage.value = "Login Failed"
-                        Toast.makeText(context, "Not ok", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Invalid email or password.", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
@@ -86,27 +83,24 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun signUp(email: String, password: String) {
+    fun signUp(email: String, password: String, context: Context) {
         viewModelScope.launch {
             authUseCases.signUp(email, password).collect { response ->
                 when (response) {
                     is Response.Loading -> {
-                        //toastMessage.value = ""
                     }
                     is Response.Success -> {
                         isUserSignUpState.value = response.data
-                        //toastMessage.value = "Sign Up Successful"
                         Log.d("TAG", "Sign Up Successful")
-                        //firstTimeCreateProfileToFirebase()
+                        Toast.makeText(context, "Sign-up complete! You can now log in with your credentials.", Toast.LENGTH_SHORT).show()
                     }
                     is Response.Error -> {
                         try {
-                            //toastMessage.value = "Sign Up Failed"
-                            Log.d("TAG", "Sign Up Failed")
+                            Log.d("TAG", "Sign Up Failed: ${response.message}")
+                            Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
                         }catch (e: Exception){
                             Log.e("TAG", "signUp: ", Throwable(e))
                         }
-//                        Timber.tag("TAG").e("signUp: ")
                     }
                 }
             }
@@ -127,6 +121,25 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    fun signOut() {
+        viewModelScope.launch {
+            authUseCases.signOut().collect() { response ->
+                when(response) {
+                    is Response.Loading -> {
 
+                    }
+                    is Response.Success -> {
+                        isUserAuthenticatedState.value = false
+                        isUserSignInState.value = false
+                        isUserSignUpState.value = false
+                    }
+                    is Response.Error -> {
+
+                    }
+                }
+
+            }
+        }
+    }
 
 }

@@ -19,10 +19,6 @@ class AuthViewModel @Inject constructor(
 
     var isUserAuthenticatedState = mutableStateOf(false)
         private set
-    var isUserSignInState = mutableStateOf(false)
-        private set
-    var isUserSignUpState = mutableStateOf(false)
-        private set
 
     init {
         isUserAuthenticated()
@@ -34,7 +30,7 @@ class AuthViewModel @Inject constructor(
                 when (response) {
                     is Response.Loading -> {  }
                     is Response.Success -> {
-                        isUserSignInState.value = response.data
+                        isUserAuthenticatedState.value = response.data
                     }
                     is Response.Error -> {
                         // Handle the error
@@ -53,7 +49,8 @@ class AuthViewModel @Inject constructor(
                     }
 
                     is Response.Success -> {
-                        isUserSignInState.value = response.data
+                        isUserAuthenticatedState.value = response.data
+                        isUserAuthenticated()
                     }
 
                     is Response.Error -> {
@@ -72,8 +69,6 @@ class AuthViewModel @Inject constructor(
                         // Show loading spinner
                     }
                     is Response.Success -> {
-                        // Handle success (navigate to next screen, update UI)
-                        isUserSignInState.value = response.data
                     }
                     is Response.Error -> {
                         // Handle error (display a toast or message)
@@ -90,7 +85,6 @@ class AuthViewModel @Inject constructor(
                     is Response.Loading -> {
                     }
                     is Response.Success -> {
-                        isUserSignUpState.value = response.data
                         Log.d("TAG", "Sign Up Successful")
                         Toast.makeText(context, "Sign-up complete! You can now log in with your credentials.", Toast.LENGTH_SHORT).show()
                     }
@@ -130,8 +124,6 @@ class AuthViewModel @Inject constructor(
                     }
                     is Response.Success -> {
                         isUserAuthenticatedState.value = false
-                        isUserSignInState.value = false
-                        isUserSignUpState.value = false
                     }
                     is Response.Error -> {
 

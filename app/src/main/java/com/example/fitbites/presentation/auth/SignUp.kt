@@ -42,6 +42,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.example.fitbites.navigation.ROUTE_LOGIN
 import com.example.fitbites.presentation.components.*
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -53,8 +55,8 @@ import com.google.android.gms.common.api.ApiException
 @Composable
 fun SignUpScreen(
     authViewModel: AuthViewModel = hiltViewModel(),
-    onSignUpClick: () -> Unit,
-    onSignInClick: () -> Unit
+    navController: NavController,
+    onSignUpClick: () -> Unit
 ) {
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
@@ -86,14 +88,6 @@ fun SignUpScreen(
             } catch (e: ApiException) {
                 Log.e("GoogleSignIn", "Google sign-in failed", e)
             }
-        }
-    }
-
-
-    val isUserSignUp = authViewModel.isUserSignUpState.value
-    LaunchedEffect(key1 = isUserSignUp) {
-        if (isUserSignUp) {
-            Log.e("Auth", "Crated account")
         }
     }
 
@@ -211,6 +205,7 @@ fun SignUpScreen(
                 text = "Sign Up",
                 onClick = {
                     authViewModel.signUp(email, password, context)
+                    navController.navigate(ROUTE_LOGIN)
                 },
                 modifier = Modifier.padding(horizontal = 30.dp)
             )
@@ -237,7 +232,9 @@ fun SignUpScreen(
             AuthFooter(
                 message = "Already have an account? ",
                 actionText = "Sign in",
-                onActionClick = { onSignInClick() }
+                onActionClick = {
+                    navController.navigate(ROUTE_LOGIN)
+                }
             )
 
         }

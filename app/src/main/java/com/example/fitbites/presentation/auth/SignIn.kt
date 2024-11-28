@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fitbites.navigation.ROUTE_DASHBOARD
+import com.example.fitbites.navigation.ROUTE_SIGNUP
 import com.example.fitbites.presentation.components.AuthFooter
 import com.example.fitbites.presentation.components.AuthHeader
 import com.example.fitbites.presentation.components.AuthTextField
@@ -49,8 +50,7 @@ fun LoginScreen(
     authViewModel: AuthViewModel = hiltViewModel(),
     navController: NavController,
     onSignInClick: () -> Unit,
-    onForgotPasswordClick: () -> Unit,
-    onSignUpClick: () -> Unit
+    onForgotPasswordClick: () -> Unit
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -86,19 +86,10 @@ fun LoginScreen(
     }
 
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(isUserAuthenticated) {
         if (isUserAuthenticated) {
+            Log.d("AUTH", "User is authenticated")
             navController.navigate(ROUTE_DASHBOARD)
-        }
-    }
-
-    val isUserSignIn = authViewModel.isUserSignInState.value
-    LaunchedEffect(key1 = isUserSignIn) {
-        if (isUserSignIn) {
-            // keyboardController.hide()
-            // navController.navigate(BottomNavItem.Profile.fullRoute)
-            navController.navigate(ROUTE_DASHBOARD)
-            Log.d("Auth", "Loged in")
         }
     }
 
@@ -181,7 +172,9 @@ fun LoginScreen(
             AuthFooter(
                 message = stringResource(R.string.don_t_have_an_account),
                 actionText = stringResource(R.string.sign_up),
-                onActionClick = { onSignUpClick() }
+                onActionClick = {
+                    navController.navigate(ROUTE_SIGNUP)
+                }
             )
 
         }

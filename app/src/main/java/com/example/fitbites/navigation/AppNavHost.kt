@@ -33,20 +33,13 @@ fun AppNavHost(
             LoginScreen(
                 navController = navController,
                 onSignInClick = { },
-                onForgotPasswordClick = {  },
-                onSignUpClick = {
-                    navController.navigate(ROUTE_SIGNUP) {
-                    }
-                }
+                onForgotPasswordClick = {  }
             )
         }
         composable(ROUTE_SIGNUP) {
             SignUpScreen(
-                onSignUpClick = { },
-                onSignInClick = {
-                    navController.navigate(ROUTE_LOGIN) {
-                    }
-                }
+                navController = navController,
+                onSignUpClick = { }
             )
         }
 

@@ -12,4 +12,5 @@ interface AuthRepository {
     suspend fun signUpWithGoogle(idToken: String): Flow<Response<Boolean>>
     suspend fun signInWithGoogle(idToken: String): Flow<Response<Boolean>>
     suspend fun signOut(): Flow<Response<Boolean>>
+    suspend fun sendPasswordResetEmail(email: String): Flow<Response<Boolean>>
 }

@@ -119,4 +119,14 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun sendPasswordResetEmail(email: String): Flow<Response<Boolean>> = flow{
+        try {
+            emit(Response.Loading)
+            auth.sendPasswordResetEmail(email).await()
+            emit(Response.Success(true))
+        } catch (e: Exception) {
+            emit(Response.Error(e.localizedMessage ?: "Eroare necunoscuta"))
+        }
+    }
+
 }

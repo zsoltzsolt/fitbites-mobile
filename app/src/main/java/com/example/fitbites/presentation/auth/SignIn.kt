@@ -2,6 +2,7 @@ package com.example.fitbites.presentation.auth
 
 import android.app.Activity
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -40,6 +41,7 @@ import com.example.fitbites.presentation.components.AuthTextField
 import com.example.fitbites.presentation.components.GradientButton
 import com.example.fitbites.presentation.components.SocialMediaSection
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
+import com.example.fitbites.utils.Response
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -68,6 +70,24 @@ fun LoginScreen(
                 .build()
         )
     }
+
+    val passwordResetState by authViewModel.passwordResetState.collectAsState()
+
+    LaunchedEffect(passwordResetState) {
+        passwordResetState?.let { response ->
+            when (response) {
+                is Response.Success -> {
+                    Toast.makeText(context, "Password reset email sent", Toast.LENGTH_SHORT).show()
+                }
+                is Response.Error -> {
+                    Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
+                }
+                is Response.Loading -> {
+                }
+            }
+        }
+    }
+
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
@@ -137,7 +157,7 @@ fun LoginScreen(
                 fontSize = 14.sp,
                 modifier = Modifier
                     .align(Alignment.End)
-                    .clickable { onForgotPasswordClick() }
+                    .clickable { authViewModel.sendPasswordResetEmail(email) }
             )
 
             Spacer(modifier = Modifier.height(32.dp))

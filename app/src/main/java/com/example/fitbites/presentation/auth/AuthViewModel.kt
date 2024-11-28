@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.fitbites.domain.auth.usecase.AuthUseCases
 import com.example.fitbites.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,6 +18,8 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(
     private val authUseCases: AuthUseCases,
 ) : ViewModel() {
+    private val _passwordResetState = MutableStateFlow<Response<Boolean>?>(null)
+    val passwordResetState: StateFlow<Response<Boolean>?> get() = _passwordResetState
 
     var isUserAuthenticatedState = mutableStateOf(false)
         private set
@@ -130,6 +134,15 @@ class AuthViewModel @Inject constructor(
                     }
                 }
 
+            }
+        }
+    }
+
+    fun sendPasswordResetEmail(email: String) {
+        viewModelScope.launch {
+            authUseCases.sendPasswordResetEmail(email).collect { response ->
+                _passwordResetState.value = response
+                Log.d("Auth - PR", response.toString())
             }
         }
     }

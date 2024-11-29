@@ -21,6 +21,16 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        resValue("string", "facebook_app_id", "\"${project.properties["FACEBOOK_APP_ID"]}\"")
+
+        buildConfigField("String", "GOOGLE_REQUEST_TOKEN", "\"${project.properties["GOOGLE_REQUEST_TOKEN"]}\"")
+        buildConfigField("String", "FACEBOOK_CLIENT_TOKEN", "\"${project.properties["FACEBOOK_CLIENT_TOKEN"]}\"")
+        buildConfigField("String", "FACEBOOK_APP_ID", "\"${project.properties["FACEBOOK_APP_ID"]}\"")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {

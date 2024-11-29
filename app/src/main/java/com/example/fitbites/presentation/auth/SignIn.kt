@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.fitbites.BuildConfig
 import com.example.fitbites.navigation.ROUTE_DASHBOARD
 import com.example.fitbites.navigation.ROUTE_SIGNUP
 import com.example.fitbites.presentation.components.AuthFooter
@@ -45,6 +46,7 @@ import com.example.fitbites.utils.Response
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -65,7 +67,7 @@ fun LoginScreen(
         GoogleSignIn.getClient(
             context,
             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("643971702076-cfrpevceeh7lb5isojf2kl7tv8ea22sq.apps.googleusercontent.com")  // Replace with your actual Web Client ID from Firebase
+                .requestIdToken(BuildConfig.GOOGLE_REQUEST_TOKEN)
                 .requestEmail()
                 .build()
         )

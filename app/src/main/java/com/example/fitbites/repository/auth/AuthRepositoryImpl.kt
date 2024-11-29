@@ -63,7 +63,6 @@ class AuthRepositoryImpl @Inject constructor(
         try {
             emit(Response.Loading)
 
-            // Await the result of account creation
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             val user = result.user
 
@@ -87,7 +86,7 @@ class AuthRepositoryImpl @Inject constructor(
             emit(Response.Loading)
             val credential = GoogleAuthProvider.getCredential(idToken, null)
             val authResult = auth.signInWithCredential(credential).await()
-            if (authResult.user != null) {
+            if (authResult.additionalUserInfo?.isNewUser == true) {
                 emit(Response.Success(true))
             } else {
                 emit(Response.Success(false))
@@ -102,7 +101,7 @@ class AuthRepositoryImpl @Inject constructor(
             emit(Response.Loading)
             val credential = GoogleAuthProvider.getCredential(idToken, null)
             val authResult = auth.signInWithCredential(credential).await()
-            if (authResult.user != null) {
+            if (authResult.additionalUserInfo?.isNewUser == false) {
                 emit(Response.Success(true))
             } else {
                 emit(Response.Success(false))

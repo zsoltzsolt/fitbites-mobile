@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.fitbites.BuildConfig
 import com.example.fitbites.navigation.ROUTE_LOGIN
 import com.example.fitbites.presentation.components.*
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
@@ -98,7 +99,7 @@ fun SignUpScreen(
         GoogleSignIn.getClient(
             context,
             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("643971702076-cfrpevceeh7lb5isojf2kl7tv8ea22sq.apps.googleusercontent.com")
+                .requestIdToken(BuildConfig.GOOGLE_REQUEST_TOKEN)
                 .requestEmail()
                 .build()
         )
@@ -130,7 +131,6 @@ fun SignUpScreen(
                     Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
                 }
                 is Response.Loading -> {
-                    // Show loading if needed
                 }
             }
         }

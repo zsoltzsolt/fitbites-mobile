@@ -49,7 +49,6 @@ class AuthViewModel @Inject constructor(
 
                     }
                     is Response.Error -> {
-                        // Handle the error
                     }
                 }
             }
@@ -82,12 +81,10 @@ class AuthViewModel @Inject constructor(
             authUseCases.signUpWithGoogle(idToken).collect { response: Response<Boolean> ->
                 when (response) {
                     is Response.Loading -> {
-                        // Show loading spinner
                     }
                     is Response.Success -> {
                     }
                     is Response.Error -> {
-                        // Handle error (display a toast or message)
                     }
                 }
             }
@@ -121,13 +118,11 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             authUseCases.signInWithFacebook(accessToken).collect { response ->
                 when (response) {
-                    is Response.Loading -> { /* Show loading */ }
+                    is Response.Loading -> { }
                     is Response.Success -> {
                         isUserAuthenticatedState.value = response.data
-                        // Handle successful login
                     }
                     is Response.Error -> {
-                        // Handle error
                     }
                 }
             }
@@ -138,13 +133,11 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             authUseCases.signUpWithFacebook(accessToken).collect { response ->
                 when (response) {
-                    is Response.Loading -> { /* Show loading */ }
+                    is Response.Loading -> { }
                     is Response.Success -> {
                         isUserAuthenticatedState.value = response.data
-                        // Handle successful signup
                     }
                     is Response.Error -> {
-                        // Handle error
                     }
                 }
             }

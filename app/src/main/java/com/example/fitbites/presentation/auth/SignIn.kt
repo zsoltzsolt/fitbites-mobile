@@ -107,7 +107,7 @@ fun LoginScreen(
 
 
     LaunchedEffect(isUserAuthenticated) {
-        if (isUserAuthenticated) {
+        if (isUserAuthenticated ) {
             Log.d("AUTH", "User is authenticated")
             navController.navigate(ROUTE_DASHBOARD)
         }

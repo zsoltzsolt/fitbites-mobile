@@ -20,12 +20,22 @@ class AuthViewModel @Inject constructor(
 ) : ViewModel() {
     private val _passwordResetState = MutableStateFlow<Response<Boolean>?>(null)
     val passwordResetState: StateFlow<Response<Boolean>?> get() = _passwordResetState
+    private val _emailVerificationState = MutableStateFlow<Response<Boolean>?>(null)
+    val emailVerificationState: StateFlow<Response<Boolean>?> get() = _emailVerificationState
 
     var isUserAuthenticatedState = mutableStateOf(false)
         private set
 
     init {
         isUserAuthenticated()
+    }
+
+    fun sendEmailVerification() {
+        viewModelScope.launch {
+            authUseCases.sendEmailVerification().collect { response ->
+                _emailVerificationState.value = response
+            }
+        }
     }
 
     fun signInWithGoogle(idToken: String) {
@@ -35,6 +45,8 @@ class AuthViewModel @Inject constructor(
                     is Response.Loading -> {  }
                     is Response.Success -> {
                         isUserAuthenticatedState.value = response.data
+                        sendEmailVerification()
+
                     }
                     is Response.Error -> {
                         // Handle the error
@@ -104,6 +116,41 @@ class AuthViewModel @Inject constructor(
             }
         }
     }
+
+    fun signInWithFacebook(accessToken: String) {
+        viewModelScope.launch {
+            authUseCases.signInWithFacebook(accessToken).collect { response ->
+                when (response) {
+                    is Response.Loading -> { /* Show loading */ }
+                    is Response.Success -> {
+                        isUserAuthenticatedState.value = response.data
+                        // Handle successful login
+                    }
+                    is Response.Error -> {
+                        // Handle error
+                    }
+                }
+            }
+        }
+    }
+
+    fun signUpWithFacebook(accessToken: String) {
+        viewModelScope.launch {
+            authUseCases.signUpWithFacebook(accessToken).collect { response ->
+                when (response) {
+                    is Response.Loading -> { /* Show loading */ }
+                    is Response.Success -> {
+                        isUserAuthenticatedState.value = response.data
+                        // Handle successful signup
+                    }
+                    is Response.Error -> {
+                        // Handle error
+                    }
+                }
+            }
+        }
+    }
+
 
     private fun isUserAuthenticated() {
         viewModelScope.launch {

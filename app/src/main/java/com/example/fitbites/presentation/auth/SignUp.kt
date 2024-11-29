@@ -3,6 +3,7 @@ package com.example.fitbites.presentation.auth
 import android.app.Activity
 import android.content.res.Configuration
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -46,6 +47,12 @@ import androidx.navigation.NavController
 import com.example.fitbites.navigation.ROUTE_LOGIN
 import com.example.fitbites.presentation.components.*
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
+import com.example.fitbites.utils.Response
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -63,6 +70,28 @@ fun SignUpScreen(
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var checked by remember { mutableStateOf(false) }
+    val emailVerificationState by authViewModel.emailVerificationState.collectAsState()
+
+
+    val callbackManager = remember { CallbackManager.Factory.create() }
+    LoginManager.getInstance().registerCallback(
+        callbackManager,
+        object : FacebookCallback<LoginResult> {
+            override fun onSuccess(result: LoginResult) {
+                val accessToken = result.accessToken.token
+                authViewModel.signUpWithFacebook(accessToken)
+            }
+
+            override fun onCancel() {
+                Log.d("FacebookAuth", "Facebook login cancelled")
+            }
+
+            override fun onError(error: FacebookException) {
+                Log.e("FacebookAuth", "Facebook login error", error)
+            }
+        }
+    )
+
 
     val context = LocalContext.current
     val googleSignInClient = remember {
@@ -87,6 +116,22 @@ fun SignUpScreen(
                 }
             } catch (e: ApiException) {
                 Log.e("GoogleSignIn", "Google sign-in failed", e)
+            }
+        }
+    }
+
+    LaunchedEffect(emailVerificationState) {
+        emailVerificationState?.let { response ->
+            when (response) {
+                is Response.Success -> {
+                    Toast.makeText(context, "Verification email sent. Please check your inbox.", Toast.LENGTH_SHORT).show()
+                }
+                is Response.Error -> {
+                    Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
+                }
+                is Response.Loading -> {
+                    // Show loading if needed
+                }
             }
         }
     }
@@ -220,6 +265,10 @@ fun SignUpScreen(
                 },
                 onFacebookAuth = {
                     Log.d("SocialAuth", "Facebook icon clicked")
+                    LoginManager.getInstance().logInWithReadPermissions(
+                        context as Activity,
+                        listOf("email", "public_profile")
+                    )
                 },
                 onAppleAuth = {
                     Log.d("SocialAuth", "Apple icon clicked")

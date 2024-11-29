@@ -1,7 +1,9 @@
 package com.example.fitbites.repository.auth
 
+import android.media.FaceDetector
 import com.example.fitbites.domain.auth.repository.AuthRepository
 import com.example.fitbites.utils.Response
+import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import kotlinx.coroutines.cancel
@@ -35,49 +37,50 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun signIn(
         email: String,
         password: String
-    ): Flow<Response<Boolean>> = callbackFlow {
+    ): Flow<Response<Boolean>> = flow {
         try {
-            this@callbackFlow.trySendBlocking(Response.Loading)
-            auth.signInWithEmailAndPassword(email, password).apply {
-                this.await()
-                if (this.isSuccessful) {
-                    this@callbackFlow.trySendBlocking(Response.Success(true))
+            emit(Response.Loading)
+
+            val result = auth.signInWithEmailAndPassword(email, password).await()
+            val user = result.user
+
+            if (user != null) {
+                if (user.isEmailVerified) {
+                    emit(Response.Success(true))
                 } else {
-                    this@callbackFlow.trySendBlocking(Response.Success(false))
+                    emit(Response.Error("Email not verified. Please verify your email and try again."))
+                    auth.signOut()
                 }
+            } else {
+                emit(Response.Error("Authentication failed. Please try again."))
             }
         } catch (e: Exception) {
-            this@callbackFlow.trySendBlocking(Response.Error(e.message ?: "Error"))
-        }
-
-        awaitClose {
-            channel.close()
-            cancel()
+            emit(Response.Error(e.localizedMessage ?: "An error occurred."))
         }
     }
 
-    override suspend fun signUp(
-        email: String,
-        password: String
-    ): Flow<Response<Boolean>> =
-        callbackFlow {
-            try {
-                this@callbackFlow.trySendBlocking(Response.Loading)
-                auth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
-                    if (it.user != null) {
-                        this@callbackFlow.trySendBlocking(Response.Success(true))
-                    }
-                }.addOnFailureListener {
-                    this@callbackFlow.trySendBlocking(Response.Error(it.message ?: "Error"))
-                }
-            } catch (e: Exception) {
-                this@callbackFlow.trySendBlocking(Response.Error(e.message ?: "Error"))
+    override suspend fun signUp(email: String, password: String): Flow<Response<Boolean>> = flow {
+        try {
+            emit(Response.Loading)
+
+            // Await the result of account creation
+            val result = auth.createUserWithEmailAndPassword(email, password).await()
+            val user = result.user
+
+            if (user != null) {
+                val emailVerificationTask = user.sendEmailVerification()
+                emailVerificationTask.await()
+                auth.signOut()
+                emit(Response.Success(true))
+            } else {
+                emit(Response.Error("Account creation failed. Please try again."))
             }
-            awaitClose {
-                channel.close()
-                cancel()
-            }
+        } catch (e: Exception) {
+            emit(Response.Error(e.localizedMessage ?: "An error occurred during sign-up."))
         }
+    }
+
+
 
     override suspend fun signUpWithGoogle(idToken: String): Flow<Response<Boolean>> = flow {
         try {
@@ -109,6 +112,40 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun signInWithFacebook(idToken: String): Flow<Response<Boolean>> = flow {
+        try {
+            emit(Response.Loading)
+
+            val credential = FacebookAuthProvider.getCredential(idToken)
+            val authResult = auth.signInWithCredential(credential).await()
+
+            if (authResult.additionalUserInfo?.isNewUser == false) {
+                emit(Response.Success(true))
+            } else {
+                emit(Response.Error("Email not registered"))
+            }
+        } catch (e: Exception) {
+            emit(Response.Error(e.localizedMessage ?: "Error signing in with Facebook"))
+        }
+    }
+
+    override suspend fun signUpWithFacebook(idToken: String): Flow<Response<Boolean>> = flow {
+        try {
+            emit(Response.Loading)
+
+            val credential = FacebookAuthProvider.getCredential(idToken)
+            val authResult = auth.signInWithCredential(credential).await()
+
+            if (authResult.user != null) {
+                emit(Response.Success(true))
+            } else {
+                emit(Response.Error("Authentication failed!"))
+            }
+        } catch (e: Exception) {
+            emit(Response.Error(e.localizedMessage ?: "Error signing in with Facebook"))
+        }
+    }
+
     override suspend fun signOut(): Flow<Response<Boolean>> = flow {
         try {
             emit(Response.Loading)
@@ -126,6 +163,22 @@ class AuthRepositoryImpl @Inject constructor(
             emit(Response.Success(true))
         } catch (e: Exception) {
             emit(Response.Error(e.localizedMessage ?: "Eroare necunoscuta"))
+        }
+    }
+
+    override suspend fun sendEmailVerification(): Flow<Response<Boolean>> = flow {
+        try {
+            emit(Response.Loading)
+
+            val user = auth.currentUser
+            if (user != null) {
+                user.sendEmailVerification().await()
+                emit(Response.Success(true))
+            } else {
+                emit(Response.Error("Eroare"))
+            }
+        } catch (e: Exception) {
+            emit(Response.Error(e.localizedMessage ?: "Failed to send verification email"))
         }
     }
 

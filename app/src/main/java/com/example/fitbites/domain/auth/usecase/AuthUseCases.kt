@@ -6,7 +6,9 @@ data class AuthUseCases(
     val signUp: SignUp,
     val signUpWithGoogle: SignUpWithGoogle,
     val signInWithGoogle: SignInWithGoogle,
+    val signInWithFacebook: SignInWithFacebook,
+    val signUpWithFacebook: SignUpWithFacebook,
     val signOut: SignOut,
     val sendPasswordResetEmail: SendPasswordResetEmail,
-
+    val sendEmailVerification: SendEmailVerification
 )

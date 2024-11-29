@@ -1,7 +1,5 @@
 package com.example.fitbites.ui.theme
 
-import android.os.Bundle
-import androidx.compose.material3.TextField
 import com.example.fitbites.R
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
@@ -37,7 +35,14 @@ val Typography = Typography(
         fontFamily = Poppins,
         fontWeight = FontWeight.Light,
         fontSize = 18.sp
+    ),
+    headlineMedium = TextStyle(
+        fontFamily = Poppins,
+        fontWeight = FontWeight.Light,
+        fontSize = 10.sp
     )
+
+
     /* Other default text styles to override
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,

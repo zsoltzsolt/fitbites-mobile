@@ -3,6 +3,7 @@ package com.example.fitbites.di
 import com.example.fitbites.repository.auth.AuthRepositoryImpl
 import com.example.fitbites.domain.auth.repository.AuthRepository
 import com.example.fitbites.domain.auth.usecase.AuthUseCases
+import com.example.fitbites.domain.auth.usecase.IsSetupCompleted
 import com.example.fitbites.domain.auth.usecase.IsUserAuthenticated
 import com.example.fitbites.domain.auth.usecase.SendEmailVerification
 import com.example.fitbites.domain.auth.usecase.SendPasswordResetEmail
@@ -52,6 +53,7 @@ object AppModule {
     @Provides
     fun provideAuthScreenUseCase(authRepository: AuthRepository) = AuthUseCases(
         isUserAuthenticated = IsUserAuthenticated(authRepository),
+        isSetupCompleted = IsSetupCompleted(authRepository),
         signIn = SignIn(authRepository),
         signUp = SignUp(authRepository),
         signUpWithGoogle = SignUpWithGoogle(authRepository),

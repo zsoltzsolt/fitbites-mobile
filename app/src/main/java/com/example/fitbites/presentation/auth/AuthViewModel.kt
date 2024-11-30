@@ -26,8 +26,13 @@ class AuthViewModel @Inject constructor(
     var isUserAuthenticatedState = mutableStateOf(false)
         private set
 
+    private val _isSetupComplete = MutableStateFlow(false)
+    val isSetupComplete: StateFlow<Boolean> get() = _isSetupComplete
+
+
     init {
         isUserAuthenticated()
+        isSetupCompleted()
     }
 
     fun sendEmailVerification() {
@@ -65,6 +70,7 @@ class AuthViewModel @Inject constructor(
                     is Response.Success -> {
                         isUserAuthenticatedState.value = response.data
                         isUserAuthenticated()
+                        isSetupCompleted()
                     }
 
                     is Response.Error -> {
@@ -151,6 +157,21 @@ class AuthViewModel @Inject constructor(
                     is Response.Loading -> {}
                     is Response.Success -> {
                         isUserAuthenticatedState.value = response.data
+                    }
+                    is Response.Error -> {}
+                }
+            }
+        }
+    }
+
+     fun isSetupCompleted() {
+        viewModelScope.launch {
+            authUseCases.isSetupCompleted().collect() { response ->
+                when (response) {
+                    is Response.Loading -> {}
+                    is Response.Success -> {
+                        Log.d("USER_PROFILE", response.toString())
+                        _isSetupComplete.value = response.data
                     }
                     is Response.Error -> {}
                 }

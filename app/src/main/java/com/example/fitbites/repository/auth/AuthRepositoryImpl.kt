@@ -37,6 +37,26 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun isSetupCompleted(): Flow<Response<Boolean>> = flow {
+        try {
+            emit(Response.Loading)
+
+            val currentUser = auth.currentUser
+            if (currentUser == null) {
+                emit(Response.Error("No user is logged in."))
+                return@flow
+            }
+
+            val userDoc = firestore.collection("users").document(currentUser.uid).get().await()
+
+            val isSetupComplete = userDoc.getBoolean("isSetupComplete") ?: false
+            emit(Response.Success(isSetupComplete))
+
+        } catch (e: Exception) {
+            emit(Response.Error(e.localizedMessage ?: "An error occurred while checking setup status."))
+        }
+    }
+
     override suspend fun signIn(
         email: String,
         password: String

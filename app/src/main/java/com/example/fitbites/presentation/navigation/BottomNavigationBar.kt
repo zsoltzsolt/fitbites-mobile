@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.outlined.Chat
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -28,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavController
 
 data class BottomNavigationItem(
     val title: String,
@@ -36,7 +39,9 @@ data class BottomNavigationItem(
 )
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun BottomNavigationBar() {
+fun BottomNavigationBar(
+    navController: NavController
+) {
     val items = listOf(
         BottomNavigationItem(
             title = "Chat",
@@ -49,9 +54,9 @@ fun BottomNavigationBar() {
             unselectedIcon = Icons.Outlined.Home,
         ),
         BottomNavigationItem(
-            title = "Settings",
-            selectedIcon = Icons.Filled.Settings,
-            unselectedIcon = Icons.Outlined.Settings,
+            title = "Profile",
+            selectedIcon = Icons.Filled.Person,
+            unselectedIcon = Icons.Outlined.Person,
         ),
     )
 
@@ -62,62 +67,46 @@ fun BottomNavigationBar() {
     Surface(
         modifier = Modifier.fillMaxSize()
     ) {
-        Scaffold(
-            bottomBar = {
-                NavigationBar(
-
-                    containerColor = MaterialTheme.colorScheme.background
-                ) {
-                    items.forEachIndexed { index, item ->
-                        NavigationBarItem(
-                            selected = _selectedItemIndex == index,
-                            onClick = {
-                                _selectedItemIndex = index
-                            },
-                            label = {
-                                Text(text = item.title)
-                            },
-                            colors = NavigationBarItemDefaults.colors(
-                                indicatorColor = Color.Transparent
-                            ),
-                            icon = {
-                                Icon(
-                                    imageVector = if (index == _selectedItemIndex) {
-                                        item.selectedIcon
-                                    } else item.unselectedIcon,
-                                    contentDescription = item.title,
-                                    tint = if (index == _selectedItemIndex) {
-                                        MaterialTheme.colorScheme.primary
-                                    } else {
-                                        MaterialTheme.colorScheme.onBackground
-                                    }
-                                )
-                            }
-                        )
+        FitbitesmobileTheme(dynamicColor = false) {
+            Scaffold(
+                bottomBar = {
+                    NavigationBar(
+                        containerColor = MaterialTheme.colorScheme.background
+                    ) {
+                        items.forEachIndexed { index, item ->
+                            NavigationBarItem(
+                                selected = _selectedItemIndex == index,
+                                onClick = {
+                                    _selectedItemIndex = index
+                                },
+                                label = {
+                                    Text(text = item.title)
+                                },
+                                colors = NavigationBarItemDefaults.colors(
+                                    indicatorColor = Color.Transparent
+                                ),
+                                icon = {
+                                    Icon(
+                                        imageVector = if (index == _selectedItemIndex) {
+                                            item.selectedIcon
+                                        } else item.unselectedIcon,
+                                        contentDescription = item.title,
+                                        tint = if (index == _selectedItemIndex) {
+                                            MaterialTheme.colorScheme.primary
+                                        } else {
+                                            MaterialTheme.colorScheme.onBackground
+                                        }
+                                    )
+                                }
+                            )
+                        }
                     }
-                }
-            },
-            content = { }
-        )
+                },
+                content = { }
+            )
+        }
     }
 }
 
-@Preview(
-    name = "Light Mode",
-    showBackground = true,
-    showSystemUi = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO
-)
-@Preview(
-    name = "Dark Mode",
-    showBackground = true,
-    showSystemUi = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-fun NavigationPreview() {
-    FitbitesmobileTheme(dynamicColor = false) {
-        BottomNavigationBar()
-    }
-}
+
 

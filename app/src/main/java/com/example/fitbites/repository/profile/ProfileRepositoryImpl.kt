@@ -16,8 +16,30 @@ class ProfileRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore
 ) : ProfileRepository {
+
     override suspend fun fetchProfile(): Flow<Response<UserProfile>> = flow {
-        emit(Response.Error("Not implemented"))
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            try {
+                val userDocRef = firestore.collection("users").document(currentUser.uid)
+                val documentSnapshot = userDocRef.get().await()
+
+                if (documentSnapshot.exists()) {
+                    val userProfile = documentSnapshot.toObject(UserProfile::class.java)
+                    if (userProfile != null) {
+                        emit(Response.Success(userProfile))
+                    } else {
+                        emit(Response.Error("User profile data is corrupted"))
+                    }
+                } else {
+                    emit(Response.Error("Profile not found"))
+                }
+            } catch (e: Exception) {
+                emit(Response.Error(e.message ?: "Unknown error"))
+            }
+        } else {
+            emit(Response.Error("User is not authenticated"))
+        }
     }
 
     override suspend fun updateProfile(userProfile: UserProfile): Flow<Response<Boolean>> = flow {
@@ -26,33 +48,36 @@ class ProfileRepositoryImpl @Inject constructor(
             try {
                 val userDocRef = firestore.collection("users").document(currentUser.uid)
 
-                val documentSnapshot = userDocRef.get().await()
-                if (!documentSnapshot.exists()) {
-                    userDocRef.set(mapOf(
-                        "name" to userProfile.name,
-                        "goal" to userProfile.goal,
-                        "gender" to userProfile.gender,
-                        "activityLevel" to userProfile.activityLevel,
-                        "height" to userProfile.height,
-                        "weight" to userProfile.weight,
-                        "age" to userProfile.age,
-                        "isSetupComplete" to userProfile.isSetupComplete
-                    )).await()
-                    emit(Response.Success(true))
-                } else {
-                    val updatedProfile = hashMapOf(
-                        "name" to userProfile.name,
-                        "goal" to userProfile.goal,
-                        "gender" to userProfile.gender,
-                        "activityLevel" to userProfile.activityLevel,
-                        "height" to userProfile.height,
-                        "weight" to userProfile.weight,
-                        "age" to userProfile.age,
-                        "isSetupComplete" to userProfile.isSetupComplete
-                    ) as Map<String, Any>
-                    userDocRef.update(updatedProfile).await()
-                    emit(Response.Success(true))
+                val updateData = mutableMapOf<String, Any>()
+
+                if (userProfile.name.isNotEmpty()) {
+                    updateData["name"] = userProfile.name
                 }
+                if (userProfile.goal.isNotEmpty()) {
+                    updateData["goal"] = userProfile.goal
+                }
+                if (userProfile.gender.isNotEmpty()) {
+                    updateData["gender"] = userProfile.gender
+                }
+                if (userProfile.activityLevel.isNotEmpty()) {
+                    updateData["activityLevel"] = userProfile.activityLevel
+                }
+                if (userProfile.height != 0) {
+                    updateData["height"] = userProfile.height
+                }
+                if (userProfile.weight != 0) {
+                    updateData["weight"] = userProfile.weight
+                }
+                if (userProfile.age != 0) {
+                    updateData["age"] = userProfile.age
+                }
+                updateData["setupComplete"] = userProfile.setupComplete
+
+                if (updateData.isNotEmpty()) {
+                    userDocRef.update(updateData).await()
+                }
+
+                emit(Response.Success(true))
 
             } catch (e: Exception) {
                 emit(Response.Error(e.message ?: "Unknown error"))
@@ -61,6 +86,7 @@ class ProfileRepositoryImpl @Inject constructor(
             emit(Response.Error("User is not authenticated"))
         }
     }
+
 
     override suspend fun deleteProfile(): Flow<Response<Boolean>> = flow {
         emit(Response.Error("Not implemented"))

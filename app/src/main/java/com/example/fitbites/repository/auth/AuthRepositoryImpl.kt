@@ -49,7 +49,7 @@ class AuthRepositoryImpl @Inject constructor(
 
             val userDoc = firestore.collection("users").document(currentUser.uid).get().await()
 
-            val isSetupComplete = userDoc.getBoolean("isSetupComplete") ?: false
+            val isSetupComplete = userDoc.getBoolean("setupComplete") == true
             emit(Response.Success(isSetupComplete))
 
         } catch (e: Exception) {

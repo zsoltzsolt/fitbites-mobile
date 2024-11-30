@@ -3,11 +3,9 @@ package com.example.fitbites.presentation.profile
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.example.fitbites.domain.auth.usecase.AuthUseCases
 import com.example.fitbites.domain.profile.usecase.ProfileUseCases
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
-import com.example.fitbites.domain.profile.repository.ProfileRepository
 import com.example.fitbites.domain.profile.model.UserProfile
 import com.example.fitbites.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,7 +44,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     fun updateSetupStatus(setupStatus: Boolean){
-        userProfile.value = userProfile.value.copy(isSetupComplete = setupStatus)
+        userProfile.value = userProfile.value.copy(setupComplete = setupStatus)
     }
 
     fun updateProfile(userProfile: UserProfile) {

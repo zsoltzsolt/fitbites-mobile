@@ -18,6 +18,7 @@ import com.example.fitbites.domain.profile.usecase.DeleteProfile
 import com.example.fitbites.domain.profile.usecase.FetchProfile
 import com.example.fitbites.domain.profile.usecase.ProfileUseCases
 import com.example.fitbites.domain.profile.usecase.UpdateProfile
+import com.example.fitbites.repository.profile.ProfileRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -39,7 +40,14 @@ object AppModule {
     @Provides
     fun provideAuthRepository(
         auth: FirebaseAuth,
-    ): AuthRepository = AuthRepositoryImpl(auth)
+        firestore: FirebaseFirestore
+    ): AuthRepository = AuthRepositoryImpl(auth, firestore)
+
+    @Provides
+    fun provideProfileRepository(
+        auth: FirebaseAuth,
+        firestore: FirebaseFirestore
+    ): ProfileRepository = ProfileRepositoryImpl(auth, firestore)
 
     @Provides
     fun provideAuthScreenUseCase(authRepository: AuthRepository) = AuthUseCases(
@@ -56,7 +64,7 @@ object AppModule {
     )
 
     @Provides
-    fun provideProfileUseCase(profileRepository: ProfileRepository) = ProfileUseCases(
+    fun provideProfileScreenUseCase(profileRepository: ProfileRepository) = ProfileUseCases(
         fetchProfile = FetchProfile(profileRepository),
         updateProfile = UpdateProfile(profileRepository),
         deleteProfile = DeleteProfile(profileRepository)

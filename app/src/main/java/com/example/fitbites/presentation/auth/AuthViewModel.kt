@@ -46,7 +46,6 @@ class AuthViewModel @Inject constructor(
                     is Response.Success -> {
                         isUserAuthenticatedState.value = response.data
                         sendEmailVerification()
-
                     }
                     is Response.Error -> {
                     }
@@ -91,9 +90,9 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun signUp(email: String, password: String, context: Context) {
+    fun signUp(email: String, password: String, username: String, context: Context) {
         viewModelScope.launch {
-            authUseCases.signUp(email, password).collect { response ->
+            authUseCases.signUp(email, password, username).collect { response ->
                 when (response) {
                     is Response.Loading -> {
                     }

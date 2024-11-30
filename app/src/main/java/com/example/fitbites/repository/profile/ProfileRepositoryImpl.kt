@@ -26,19 +26,33 @@ class ProfileRepositoryImpl @Inject constructor(
             try {
                 val userDocRef = firestore.collection("users").document(currentUser.uid)
 
-                val updatedProfile = hashMapOf(
-                    "name" to userProfile.name,
-                    "goal" to userProfile.goal,
-                    "gender" to userProfile.gender,
-                    "activityLevel" to userProfile.activityLevel,
-                    "height" to userProfile.height,
-                    "weight" to userProfile.weight,
-                    "age" to userProfile.age
-                ) as Map<String, Any>
-
-                userDocRef.update(updatedProfile).await()
-
-                emit(Response.Success(true))
+                val documentSnapshot = userDocRef.get().await()
+                if (!documentSnapshot.exists()) {
+                    userDocRef.set(mapOf(
+                        "name" to userProfile.name,
+                        "goal" to userProfile.goal,
+                        "gender" to userProfile.gender,
+                        "activityLevel" to userProfile.activityLevel,
+                        "height" to userProfile.height,
+                        "weight" to userProfile.weight,
+                        "age" to userProfile.age,
+                        "isSetupComplete" to userProfile.isSetupComplete
+                    )).await()
+                    emit(Response.Success(true))
+                } else {
+                    val updatedProfile = hashMapOf(
+                        "name" to userProfile.name,
+                        "goal" to userProfile.goal,
+                        "gender" to userProfile.gender,
+                        "activityLevel" to userProfile.activityLevel,
+                        "height" to userProfile.height,
+                        "weight" to userProfile.weight,
+                        "age" to userProfile.age,
+                        "isSetupComplete" to userProfile.isSetupComplete
+                    ) as Map<String, Any>
+                    userDocRef.update(updatedProfile).await()
+                    emit(Response.Success(true))
+                }
 
             } catch (e: Exception) {
                 emit(Response.Error(e.message ?: "Unknown error"))

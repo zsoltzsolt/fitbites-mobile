@@ -2,6 +2,7 @@ package com.example.fitbites.domain.auth.usecase
 
 data class AuthUseCases(
     val isUserAuthenticated: IsUserAuthenticated,
+    val isSetupCompleted: IsSetupCompleted,
     val signIn: SignIn,
     val signUp: SignUp,
     val signUpWithGoogle: SignUpWithGoogle,

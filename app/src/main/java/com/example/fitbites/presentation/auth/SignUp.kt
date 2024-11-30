@@ -254,7 +254,7 @@ fun SignUpScreen(
                 text = "Sign Up",
                 onClick = {
                     authViewModel.signUp(email, password, name, context)
-                    navController.navigate("goal")
+                    navController.navigate(ROUTE_LOGIN)
                 },
                 modifier = Modifier.padding(horizontal = 30.dp)
             )

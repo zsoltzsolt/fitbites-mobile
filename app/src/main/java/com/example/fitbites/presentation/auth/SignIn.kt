@@ -46,6 +46,7 @@ import com.example.fitbites.utils.Response
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import kotlinx.coroutines.delay
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,6 +62,7 @@ fun LoginScreen(
     var passwordVisible by remember { mutableStateOf(false) }
 
     val isUserAuthenticated = authViewModel.isUserAuthenticatedState.value
+    val isSetupCompleted by authViewModel.isSetupComplete.collectAsState()
     val context = LocalContext.current
 
     val googleSignInClient = remember {
@@ -108,12 +110,18 @@ fun LoginScreen(
     }
 
 
-    LaunchedEffect(isUserAuthenticated) {
-        if (isUserAuthenticated ) {
-            Log.d("AUTH", "User is authenticated")
-            navController.navigate(ROUTE_DASHBOARD)
+    LaunchedEffect(isUserAuthenticated, isSetupCompleted) {
+        if (isUserAuthenticated) {
+            if (isSetupCompleted) {
+                Log.d("AUTH", "Setup is complete, navigating to dashboard")
+                navController.navigate("dashboard")
+            } else {
+                Log.d("AUTH", "Setup not complete, navigating to goal setup")
+                navController.navigate("goal")
+            }
         }
     }
+
 
     FitbitesmobileTheme(dynamicColor = false) {
         Column(

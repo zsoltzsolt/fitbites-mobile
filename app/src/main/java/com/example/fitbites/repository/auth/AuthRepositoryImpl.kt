@@ -2,10 +2,12 @@ package com.example.fitbites.repository.auth
 
 import android.media.FaceDetector
 import com.example.fitbites.domain.auth.repository.AuthRepository
+import com.example.fitbites.domain.profile.model.UserProfile
 import com.example.fitbites.utils.Response
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.channels.trySendBlocking
@@ -18,7 +20,8 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthRepositoryImpl @Inject constructor(
-  private val auth: FirebaseAuth
+  private val auth: FirebaseAuth,
+  private val firestore: FirebaseFirestore
 ) : AuthRepository {
 
     override fun isUserAuthenticatedInFirebase(): Flow<Response<Boolean>> = flow {
@@ -31,6 +34,26 @@ class AuthRepositoryImpl @Inject constructor(
             }
         } catch (e: Exception) {
             emit(Response.Success(false))
+        }
+    }
+
+    override fun isSetupCompleted(): Flow<Response<Boolean>> = flow {
+        try {
+            emit(Response.Loading)
+
+            val currentUser = auth.currentUser
+            if (currentUser == null) {
+                emit(Response.Error("No user is logged in."))
+                return@flow
+            }
+
+            val userDoc = firestore.collection("users").document(currentUser.uid).get().await()
+
+            val isSetupComplete = userDoc.getBoolean("setupComplete") == true
+            emit(Response.Success(isSetupComplete))
+
+        } catch (e: Exception) {
+            emit(Response.Error(e.localizedMessage ?: "An error occurred while checking setup status."))
         }
     }
 
@@ -59,17 +82,25 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun signUp(email: String, password: String): Flow<Response<Boolean>> = flow {
+    override suspend fun signUp(email: String, password: String, username: String): Flow<Response<Boolean>> = flow {
         try {
             emit(Response.Loading)
 
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             val user = result.user
+            val uid = result.user?.uid
 
-            if (user != null) {
-                val emailVerificationTask = user.sendEmailVerification()
+            if (uid != null) {
+                val emailVerificationTask = user!!.sendEmailVerification()
                 emailVerificationTask.await()
                 auth.signOut()
+
+                var userProfile = UserProfile(username)
+
+                firestore.collection("users").document(uid)
+                    .set(userProfile)
+                    .await()
+
                 emit(Response.Success(true))
             } else {
                 emit(Response.Error("Account creation failed. Please try again."))

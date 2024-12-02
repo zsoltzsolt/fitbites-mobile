@@ -18,18 +18,27 @@ sealed class ThemeColors(
     val background: Color,
     val text: Color,
     val textSecondary: Color,
-    val primary: Color
+    val primary: Color,
+    val card: Color,
+    val track: Color,
+    val elevation: Color
 ) {
     object Dark: ThemeColors(
         background = RacingGreen,
         text = Color.White,
         textSecondary = SmokeyGrey,
-        primary = VibrantGreen
+        primary = VibrantGreen,
+        card = Color(0xFF1E1E2C),
+        track = Color(0xAA3E414D),
+        elevation = Color(0xFF1E1E2C)
     )
     object Light: ThemeColors(
         background = Alabaster,
         text = Color.Black,
         textSecondary = SmokeyGrey,
-        primary = VibrantGreen
+        primary = VibrantGreen,
+        card = Color.White,
+        track = Color(0x223E414D),
+        elevation = Color.White
     )
 }

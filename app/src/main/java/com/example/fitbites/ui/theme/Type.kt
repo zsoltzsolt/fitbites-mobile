@@ -50,6 +50,10 @@ val Typography = Typography(
         fontFamily = Poppins,
         fontWeight = FontWeight.Light,
         fontSize = 14.sp
+    ),
+    bodyMedium = TextStyle(
+        fontFamily = Poppins,
+        fontSize = 14.sp
     )
 
 

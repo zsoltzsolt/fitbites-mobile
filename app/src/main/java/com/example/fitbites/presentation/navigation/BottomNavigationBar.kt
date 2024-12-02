@@ -3,6 +3,9 @@ package com.example.fitbites.presentation.navigation
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Home
@@ -27,10 +30,16 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTonalElevationEnabled
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.fitbites.navigation.ROUTE_DASHBOARD
+import com.example.fitbites.presentation.dashboard.Dashboard
 
 data class BottomNavigationItem(
     val title: String,
@@ -60,53 +69,53 @@ fun BottomNavigationBar(
         ),
     )
 
-    var _selectedItemIndex by rememberSaveable {
+    var selectedItemIndex by rememberSaveable {
         mutableIntStateOf(0)
     }
 
-    Surface(
-        modifier = Modifier.fillMaxSize()
-    ) {
+    CompositionLocalProvider(LocalTonalElevationEnabled provides false) {
         FitbitesmobileTheme(dynamicColor = false) {
-            Scaffold(
-                bottomBar = {
-                    NavigationBar(
-                        containerColor = MaterialTheme.colorScheme.background
-                    ) {
-                        items.forEachIndexed { index, item ->
-                            NavigationBarItem(
-                                selected = _selectedItemIndex == index,
-                                onClick = {
-                                    _selectedItemIndex = index
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.surface,
+                tonalElevation = 6.dp,
+                modifier = Modifier.height(110.dp)
+            ) {
+                items.forEachIndexed { index, item ->
+                    NavigationBarItem(
+                        selected = selectedItemIndex == index,
+                        onClick = {
+                            selectedItemIndex = index
+                            when (index) {
+                                0 -> navController.navigate(ROUTE_DASHBOARD)
+                                1 -> navController.navigate(ROUTE_DASHBOARD)
+                                2 -> navController.navigate(ROUTE_DASHBOARD)
+                            }
+                        },
+                        label = {
+                            Text(text = item.title)
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            indicatorColor = Color.Transparent
+                        ),
+                        icon = {
+                            Icon(
+                                imageVector = if (index == selectedItemIndex) {
+                                    item.selectedIcon
+                                } else item.unselectedIcon,
+                                contentDescription = item.title,
+                                tint = if (index == selectedItemIndex) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    MaterialTheme.colorScheme.onBackground
                                 },
-                                label = {
-                                    Text(text = item.title)
-                                },
-                                colors = NavigationBarItemDefaults.colors(
-                                    indicatorColor = Color.Transparent
-                                ),
-                                icon = {
-                                    Icon(
-                                        imageVector = if (index == _selectedItemIndex) {
-                                            item.selectedIcon
-                                        } else item.unselectedIcon,
-                                        contentDescription = item.title,
-                                        tint = if (index == _selectedItemIndex) {
-                                            MaterialTheme.colorScheme.primary
-                                        } else {
-                                            MaterialTheme.colorScheme.onBackground
-                                        }
-                                    )
-                                }
+                                modifier = Modifier.size(20.dp)
                             )
                         }
-                    }
-                },
-                content = { }
-            )
+                    )
+                }
+            }
         }
     }
 }
-
 
 

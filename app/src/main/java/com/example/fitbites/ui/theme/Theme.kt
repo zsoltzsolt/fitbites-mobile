@@ -16,7 +16,9 @@ private val DarkColorScheme = darkColorScheme(
     tertiary = Pink80,
     onPrimary = ThemeColors.Dark.text,
     onSecondary = ThemeColors.Dark.textSecondary,
-    background = ThemeColors.Dark.background
+    background = ThemeColors.Dark.background,
+    surface = ThemeColors.Dark.card,
+    tertiaryContainer = ThemeColors.Dark.track,
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -25,7 +27,9 @@ private val LightColorScheme = lightColorScheme(
     tertiary = Pink40,
     onPrimary = ThemeColors.Light.text,
     onSecondary = ThemeColors.Light.textSecondary,
-    background = ThemeColors.Light.background
+    background = ThemeColors.Light.background,
+    surface = ThemeColors.Light.card,
+    tertiaryContainer = ThemeColors.Light.track
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
     surface = Color(0xFFFFFBFE),

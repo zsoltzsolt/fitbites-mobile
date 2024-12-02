@@ -26,7 +26,7 @@ import com.example.fitbites.presentation.profile.YearsSelectionScreen
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    startDestination: String = ROUTE_SPLASH
+    startDestination: String = ROUTE_DASHBOARD
 ) {
     val profileViewModel: ProfileViewModel = hiltViewModel()
     val currentBackStackEntry = navController.currentBackStackEntryAsState()
@@ -34,7 +34,7 @@ fun AppNavHost(
 
     Scaffold(
         bottomBar = {
-            if (currentRoute == ROUTE_DASHBOARD) {
+            if (currentRoute== ROUTE_DASHBOARD) {
                 BottomNavigationBar(navController)
             }
         }

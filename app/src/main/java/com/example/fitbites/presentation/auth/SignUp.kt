@@ -47,7 +47,6 @@ import androidx.navigation.NavController
 import com.example.fitbites.BuildConfig
 import com.example.fitbites.navigation.ROUTE_LOGIN
 import com.example.fitbites.presentation.components.*
-import com.example.fitbites.presentation.profile.ProfileViewModel
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
 import com.example.fitbites.utils.Response
 import com.facebook.CallbackManager
@@ -64,7 +63,6 @@ import com.google.android.gms.common.api.ApiException
 @Composable
 fun SignUpScreen(
     authViewModel: AuthViewModel = hiltViewModel(),
-    profileViewModel: ProfileViewModel,
     navController: NavController,
     onSignUpClick: () -> Unit
 ) {
@@ -158,9 +156,7 @@ fun SignUpScreen(
 
             AuthTextField(
                 value = name,
-                onValueChange = {
-                    name = it
-                    profileViewModel.updateName(name) },
+                onValueChange = { name = it },
                 label = "Full name",
                 trailingIcon = { Icon(Icons.Default.Person, contentDescription = "Name Icon") }
             )
@@ -253,7 +249,7 @@ fun SignUpScreen(
             GradientButton(
                 text = "Sign Up",
                 onClick = {
-                    authViewModel.signUp(email, password, name, context)
+                    authViewModel.signUp(email, password, context)
                     navController.navigate(ROUTE_LOGIN)
                 },
                 modifier = Modifier.padding(horizontal = 30.dp)

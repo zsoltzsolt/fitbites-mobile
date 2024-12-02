@@ -26,13 +26,8 @@ class AuthViewModel @Inject constructor(
     var isUserAuthenticatedState = mutableStateOf(false)
         private set
 
-    private val _isSetupComplete = MutableStateFlow(false)
-    val isSetupComplete: StateFlow<Boolean> get() = _isSetupComplete
-
-
     init {
         isUserAuthenticated()
-        isSetupCompleted()
     }
 
     fun sendEmailVerification() {
@@ -51,6 +46,7 @@ class AuthViewModel @Inject constructor(
                     is Response.Success -> {
                         isUserAuthenticatedState.value = response.data
                         sendEmailVerification()
+
                     }
                     is Response.Error -> {
                     }
@@ -70,7 +66,6 @@ class AuthViewModel @Inject constructor(
                     is Response.Success -> {
                         isUserAuthenticatedState.value = response.data
                         isUserAuthenticated()
-                        isSetupCompleted()
                     }
 
                     is Response.Error -> {
@@ -96,9 +91,9 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun signUp(email: String, password: String, username: String, context: Context) {
+    fun signUp(email: String, password: String, context: Context) {
         viewModelScope.launch {
-            authUseCases.signUp(email, password, username).collect { response ->
+            authUseCases.signUp(email, password).collect { response ->
                 when (response) {
                     is Response.Loading -> {
                     }
@@ -157,21 +152,6 @@ class AuthViewModel @Inject constructor(
                     is Response.Loading -> {}
                     is Response.Success -> {
                         isUserAuthenticatedState.value = response.data
-                    }
-                    is Response.Error -> {}
-                }
-            }
-        }
-    }
-
-     fun isSetupCompleted() {
-        viewModelScope.launch {
-            authUseCases.isSetupCompleted().collect() { response ->
-                when (response) {
-                    is Response.Loading -> {}
-                    is Response.Success -> {
-                        Log.d("USER_PROFILE", response.toString())
-                        _isSetupComplete.value = response.data
                     }
                     is Response.Error -> {}
                 }

@@ -1,6 +1,5 @@
-package com.example.fitbites.presentation.profile
+package com.example.fitbites.presentation.onboarding
 
-import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,15 +14,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.fitbites.navigation.ROUTE_DASHBOARD
 import com.example.fitbites.presentation.components.GradientButton
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
 
 @Composable
-fun YearsSelectionScreen(
-    viewModel: ProfileViewModel = hiltViewModel(),
+fun WeightSelectionScreen(
+    viewModel: OnboardingViewModel = hiltViewModel(),
     navController: NavController
 ) {
-    val selectedYear = viewModel.userProfile.value.age
+    val selectedWeight = viewModel.userProfile.value.weight
 
     FitbitesmobileTheme(dynamicColor = false) {
         Column(
@@ -39,26 +39,26 @@ fun YearsSelectionScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 ConfigurableHeader(
-                    title = "Enter Your Age",
-                    subtitle = "Provide your age in years"
+                    title = "Enter Your Weight",
+                    subtitle = "Select your current weight and unit"
                 )
 
-                YearsInputField(
-                    initialYear = selectedYear.toString(),
-                    onYearChanged = { year -> viewModel.updateAge(year) }
+                WeightSelectorWithDropdown(
+                    weight = selectedWeight.toString(),
+                    onWeightUpdated = { weight -> viewModel.updateWeight(weight) }
                 )
             }
 
             GradientButton(
                 text = "Next",
                 onClick = {
+                    viewModel.updateSetupStatus(true)
                     Log.d("USER_PROFILE", "User profile: ${viewModel.userProfile.value}")
-                    navController.navigate("weight")
+                    viewModel.updateProfile(viewModel.userProfile.value)
+                    navController.navigate(ROUTE_DASHBOARD)
                 },
                 modifier = Modifier.padding(horizontal = 30.dp)
             )
         }
     }
 }
-
-

@@ -21,6 +21,7 @@ import com.example.fitbites.R
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
 import kotlinx.coroutines.delay
 
+
 @Composable
 fun SplashScreen(onTimeout: () -> Unit) {
     val screenHeight = LocalConfiguration.current.screenHeightDp
@@ -32,7 +33,6 @@ fun SplashScreen(onTimeout: () -> Unit) {
         delay(2000)
         onTimeout()
     }
-
     FitbitesmobileTheme(dynamicColor = false) {
         Box(
             modifier = Modifier
@@ -47,7 +47,6 @@ fun SplashScreen(onTimeout: () -> Unit) {
                     .size(iconSize.dp)
                     .offset(y = -verticalOffset.dp)
             )
-
             Text(
                 text = "FitBites",
                 color = MaterialTheme.colorScheme.onPrimary,
@@ -67,7 +66,6 @@ fun SplashScreen(onTimeout: () -> Unit) {
         }
     }
 }
-
 @Preview(
     name = "Light Mode",
     showBackground = true,

@@ -1,4 +1,4 @@
-package com.example.fitbites.presentation.profile
+package com.example.fitbites.presentation.onboarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

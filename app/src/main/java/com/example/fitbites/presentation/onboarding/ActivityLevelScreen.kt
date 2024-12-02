@@ -1,4 +1,4 @@
-package com.example.fitbites.presentation.profile
+package com.example.fitbites.presentation.onboarding
 
 import android.util.Log
 import androidx.compose.runtime.Composable
@@ -7,7 +7,7 @@ import androidx.navigation.NavController
 
 @Composable
 fun ActivityLevelScreen(
-    viewModel: ProfileViewModel = hiltViewModel(),
+    viewModel: OnboardingViewModel = hiltViewModel(),
     navController: NavController
 ) {
     val selectedActivityLevel = viewModel.userProfile.value.activityLevel

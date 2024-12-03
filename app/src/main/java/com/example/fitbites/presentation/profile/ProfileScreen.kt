@@ -58,7 +58,7 @@ fun ProfileScreen() {
             Spacer(modifier = Modifier.height(16.dp))
 
             Image(
-                painter = painterResource(id = R.drawable.bob),
+                painter = painterResource(id = R.drawable.profile),
                 contentDescription = "Profile Picture",
                 modifier = Modifier
                     .size(100.dp)
@@ -67,14 +67,14 @@ fun ProfileScreen() {
             )
 
             Text(
-                text = "Bob",
+                text = "Strong Joe",
                 color = MaterialTheme.colorScheme.onPrimary,
                 style = MaterialTheme.typography.titleMedium,
                 fontSize = 20.sp,
                 modifier = Modifier.padding(top = 8.dp)
             )
             Text(
-                text = "bob-the-builder@gmail.com",
+                text = "example@mail.com",
                 color = Color.Gray,
                 fontSize = 14.sp,
                 modifier = Modifier.padding(top = 4.dp)
@@ -89,41 +89,95 @@ fun ProfileScreen() {
 
             Divider(color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.05f), thickness = 1.dp)
 
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    imageVector = Icons.Default.DarkMode, // Placeholder icon
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp),
-                    tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f)
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    text = "Dark mode",
-                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f),
-                    fontSize = 16.sp,
-                    modifier = Modifier.weight(1f)
-                )
-                Switch(
-                    checked = isDarkTheme,
-                    onCheckedChange = { isDarkTheme = it },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = MaterialTheme.colorScheme.background,
-                        uncheckedThumbColor = Color.Gray,
-                        checkedTrackColor = Color.Green
-                    ),
-                    modifier = Modifier.scale(0.7f) // Reduce switch size
-                )
-            }
+            CompositionLocalProvider(LocalTonalElevationEnabled provides false) {
+                ElevatedCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp),
+                    elevation = CardDefaults.elevatedCardElevation(4.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.DarkMode,
+                                contentDescription = null,
+                                modifier = Modifier.size(20.dp),
+                                tint = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f)
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Text(
+                                text = "Dark mode",
+                                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f),
+                                fontSize = 14.sp,
+                                modifier = Modifier.weight(1f)
+                            )
+                            Switch(
+                                checked = isDarkTheme,
+                                onCheckedChange = { isDarkTheme = it },
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = MaterialTheme.colorScheme.background,
+                                    uncheckedThumbColor = Color.Gray,
+                                    checkedTrackColor = Color.Green
+                                ),
+                                modifier = Modifier.scale(0.65f)
+                            )
+                        }
 
-            ProfileOptionItem(icon = Icons.Default.Mail, label = "Contact us", color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f))
-            ProfileOptionItem(icon = Icons.Default.Info, label = "About app", color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f))
-            ProfileOptionItem(icon = Icons.Default.Settings, label = "Settings", color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f))
-            ProfileOptionItem(icon = Icons.Default.Logout, label = "Logout", color = Color.Red)
+                        Divider(
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.05f),
+                            thickness = 1.dp
+                        )
+
+                        ProfileOptionItem(
+                            icon = Icons.Default.Mail,
+                            label = "Contact us",
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f)
+                        )
+
+                        Divider(
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.05f),
+                            thickness = 1.dp
+                        )
+
+                        ProfileOptionItem(
+                            icon = Icons.Default.Info,
+                            label = "About app",
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f)
+                        )
+
+                        Divider(
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.05f),
+                            thickness = 1.dp
+                        )
+
+                        ProfileOptionItem(
+                            icon = Icons.Default.Settings,
+                            label = "Settings",
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f)
+                        )
+
+                        Divider(
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.05f),
+                            thickness = 1.dp
+                        )
+
+                        ProfileOptionItem(
+                            icon = Icons.Default.Logout,
+                            label = "Logout",
+                            color = Color.Red
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(6.dp))
+                }
+            }
 
         }
     }
@@ -169,19 +223,19 @@ fun ProfileOptionItem(icon: ImageVector, label: String, color: Color) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector = icon, // Placeholder icon
+            imageVector = icon,
             contentDescription = null,
-            modifier = Modifier.size(24.dp),
+            modifier = Modifier.size(20.dp),
             tint = color
         )
         Text(
             text = label,
             color = color,
-            fontSize = 16.sp,
+            fontSize = 14.sp,
             modifier = Modifier.padding(start = 16.dp)
         )
     }

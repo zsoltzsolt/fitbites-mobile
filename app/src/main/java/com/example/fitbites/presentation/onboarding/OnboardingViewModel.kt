@@ -1,4 +1,4 @@
-package com.example.fitbites.presentation.profile
+package com.example.fitbites.presentation.onboarding
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
@@ -12,7 +12,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(
+class OnboardingViewModel @Inject constructor(
     private val profileUseCases: ProfileUseCases,
 ) : ViewModel() {
 

@@ -17,6 +17,12 @@ val Poppins = FontFamily(
     )
 )
 
+val Inter = FontFamily(
+    listOf(
+        Font(resId = R.font.inter_regular, weight = FontWeight.Normal)
+    )
+)
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
@@ -37,13 +43,18 @@ val Typography = Typography(
         fontSize = 18.sp
     ),
     headlineMedium = TextStyle(
-        fontFamily = Poppins,
+        fontFamily = Inter,
         fontWeight = FontWeight.Light,
         fontSize = 10.sp
     ),
     titleLarge = TextStyle(
         fontFamily = Poppins,
         fontWeight = FontWeight.SemiBold,
+        fontSize = 20.sp
+    ),
+    titleMedium = TextStyle(
+        fontFamily = Inter,
+        fontWeight = FontWeight.Normal,
         fontSize = 20.sp
     ),
     titleSmall = TextStyle(

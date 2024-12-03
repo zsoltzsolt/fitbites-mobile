@@ -1,4 +1,4 @@
-package com.example.fitbites.presentation.profile
+package com.example.fitbites.presentation.onboarding
 
 import android.util.Log
 import androidx.compose.runtime.Composable
@@ -7,7 +7,7 @@ import androidx.navigation.NavController
 
 @Composable
 fun GenderScreen(
-    viewModel: ProfileViewModel = hiltViewModel(),
+    viewModel: OnboardingViewModel = hiltViewModel(),
     navController: NavController
 ) {
     val selectedGender = viewModel.userProfile.value.gender

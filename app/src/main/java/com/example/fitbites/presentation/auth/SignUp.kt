@@ -1,27 +1,21 @@
 package com.example.fitbites.presentation.auth
 
 import android.app.Activity
-import android.content.res.Configuration
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckBox
 import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -29,17 +23,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.graphics.Brush
 import com.example.fitbites.R
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,7 +36,7 @@ import androidx.navigation.NavController
 import com.example.fitbites.BuildConfig
 import com.example.fitbites.navigation.ROUTE_LOGIN
 import com.example.fitbites.presentation.components.*
-import com.example.fitbites.presentation.profile.ProfileViewModel
+import com.example.fitbites.presentation.onboarding.OnboardingViewModel
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
 import com.example.fitbites.utils.Response
 import com.facebook.CallbackManager
@@ -64,7 +53,7 @@ import com.google.android.gms.common.api.ApiException
 @Composable
 fun SignUpScreen(
     authViewModel: AuthViewModel = hiltViewModel(),
-    profileViewModel: ProfileViewModel,
+    onboardingViewModel: OnboardingViewModel,
     navController: NavController,
     onSignUpClick: () -> Unit
 ) {
@@ -160,7 +149,7 @@ fun SignUpScreen(
                 value = name,
                 onValueChange = {
                     name = it
-                    profileViewModel.updateName(name) },
+                    onboardingViewModel.updateName(name) },
                 label = "Full name",
                 trailingIcon = { Icon(Icons.Default.Person, contentDescription = "Name Icon") }
             )

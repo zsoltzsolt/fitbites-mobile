@@ -15,12 +15,12 @@ import com.example.fitbites.presentation.auth.LoginScreen
 import com.example.fitbites.presentation.auth.SignUpScreen
 import com.example.fitbites.presentation.dashboard.Dashboard
 import com.example.fitbites.presentation.navigation.BottomNavigationBar
-import com.example.fitbites.presentation.profile.ActivityLevelScreen
-import com.example.fitbites.presentation.profile.GenderScreen
-import com.example.fitbites.presentation.profile.GoalScreen
-import com.example.fitbites.presentation.profile.ProfileViewModel
-import com.example.fitbites.presentation.profile.WeightSelectionScreen
-import com.example.fitbites.presentation.profile.YearsSelectionScreen
+import com.example.fitbites.presentation.onboarding.ActivityLevelScreen
+import com.example.fitbites.presentation.onboarding.GenderScreen
+import com.example.fitbites.presentation.onboarding.GoalScreen
+import com.example.fitbites.presentation.onboarding.OnboardingViewModel
+import com.example.fitbites.presentation.onboarding.WeightSelectionScreen
+import com.example.fitbites.presentation.onboarding.YearsSelectionScreen
 
 @Composable
 fun AppNavHost(
@@ -28,7 +28,7 @@ fun AppNavHost(
     navController: NavHostController = rememberNavController(),
     startDestination: String = ROUTE_DASHBOARD
 ) {
-    val profileViewModel: ProfileViewModel = hiltViewModel()
+    val onboardingViewModel: OnboardingViewModel = hiltViewModel()
     val currentBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry.value?.destination?.route
 
@@ -60,7 +60,7 @@ fun AppNavHost(
             }
             composable(ROUTE_SIGNUP) {
                 SignUpScreen(
-                    profileViewModel = profileViewModel,
+                    onboardingViewModel = onboardingViewModel,
                     navController = navController,
                     onSignUpClick = { }
                 )
@@ -74,35 +74,35 @@ fun AppNavHost(
 
             composable("goal") {
                 GoalScreen(
-                    viewModel = profileViewModel,
+                    viewModel = onboardingViewModel,
                     navController = navController
                 )
             }
 
             composable("gender") {
                 GenderScreen(
-                    viewModel = profileViewModel,
+                    viewModel = onboardingViewModel,
                     navController = navController
                 )
             }
 
             composable("active") {
                 ActivityLevelScreen(
-                    viewModel = profileViewModel,
+                    viewModel = onboardingViewModel,
                     navController = navController
                 )
             }
 
             composable("age") {
                 YearsSelectionScreen(
-                    viewModel = profileViewModel,
+                    viewModel = onboardingViewModel,
                     navController = navController
                 )
             }
 
             composable("weight") {
                 WeightSelectionScreen(
-                    viewModel = profileViewModel,
+                    viewModel = onboardingViewModel,
                     navController = navController
                 )
             }

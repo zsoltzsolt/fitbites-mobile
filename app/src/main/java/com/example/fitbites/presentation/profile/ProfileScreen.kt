@@ -3,6 +3,7 @@ package com.example.fitbites.presentation.profile
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicText
@@ -30,12 +31,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.fitbites.R
+import com.example.fitbites.navigation.ROUTE_LOGIN
+import com.example.fitbites.presentation.auth.AuthViewModel
 import com.example.fitbites.presentation.splash.SplashScreen
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    authViewModel: AuthViewModel = hiltViewModel(),
+    navController: NavController
+) {
     var isDarkTheme by remember { mutableStateOf(true) }
 
     FitbitesmobileTheme(dynamicColor = false) {
@@ -139,7 +147,8 @@ fun ProfileScreen() {
                         ProfileOptionItem(
                             icon = Icons.Default.Mail,
                             label = "Contact us",
-                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f)
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f),
+                            onClick = {}
                         )
 
                         Divider(
@@ -150,7 +159,8 @@ fun ProfileScreen() {
                         ProfileOptionItem(
                             icon = Icons.Default.Info,
                             label = "About app",
-                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f)
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f),
+                            onClick = {}
                         )
 
                         Divider(
@@ -161,7 +171,8 @@ fun ProfileScreen() {
                         ProfileOptionItem(
                             icon = Icons.Default.Settings,
                             label = "Settings",
-                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f)
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.75f),
+                            onClick = {}
                         )
 
                         Divider(
@@ -172,7 +183,11 @@ fun ProfileScreen() {
                         ProfileOptionItem(
                             icon = Icons.Default.Logout,
                             label = "Logout",
-                            color = Color.Red
+                            color = Color.Red,
+                            onClick = {
+                                authViewModel.signOut()
+                                navController.navigate(ROUTE_LOGIN)
+                            }
                         )
                     }
                     Spacer(modifier = Modifier.height(6.dp))
@@ -219,11 +234,17 @@ fun ProfileCard(label: String, value: String) {
 }
 
 @Composable
-fun ProfileOptionItem(icon: ImageVector, label: String, color: Color) {
+fun ProfileOptionItem(
+    icon: ImageVector,
+    label: String,
+    color: Color,
+    onClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp),
+            .padding(vertical = 12.dp)
+            .clickable { onClick() }, // Make the entire row clickable
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -241,21 +262,5 @@ fun ProfileOptionItem(icon: ImageVector, label: String, color: Color) {
     }
 }
 
-@Preview(
-    name = "Light Mode",
-    showBackground = true,
-    showSystemUi = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO
-)
-@Preview(
-    name = "Dark Mode",
-    showBackground = true,
-    showSystemUi = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-fun PreviewSplashScreenDark() {
-    ProfileScreen()
-}
 
 

@@ -51,6 +51,21 @@ fun ProfileScreen(
     var isDarkTheme by remember { mutableStateOf(true) }
     val userProfileState by profileViewModel.userProfileState.collectAsState()
 
+    val userProfile = if (userProfileState is Response.Success) {
+        (userProfileState as Response.Success).data
+    } else null
+
+    val macronutrientCards = userProfile?.dailyMacronutrientsGoal?.let {
+        listOf(
+            "Calorie Intake" to "${it.calories} kCal",
+            "Protein Intake" to "${it.protein} g",
+            "Carbohydrate Intake" to "${it.carbs} g",
+            "Fat Intake" to "${it.fats} g"
+        )
+    }
+
+    val showLoadingMacronutrients = macronutrientCards == null
+
     FitbitesmobileTheme(dynamicColor = false) {
         Column(
             modifier = Modifier
@@ -79,28 +94,14 @@ fun ProfileScreen(
                 contentScale = ContentScale.Crop
             )
 
-            when (userProfileState) {
-                is Response.Loading -> {
-                }
-                is Response.Success -> {
-                    val userProfile = (userProfileState as Response.Success<UserProfile>).data
-                    Text(
-                        text = userProfile.name,
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontSize = 20.sp,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                }
-                is Response.Error -> {
-                    Text(
-                        text = "Error",
-                        color = Color.Red,
-                        fontSize = 16.sp,
-                        modifier = Modifier.padding(top = 8.dp)
-                    )
-                }
+            userProfile?.let {
+                Text(
+                    text = it.name,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
             }
+
             Text(
                 text = "example@mail.com",
                 color = Color.Gray,
@@ -110,7 +111,14 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            ProfileCard(label = "Calorie Intake", value = "3400 kCal")
+            if (showLoadingMacronutrients) {
+                Text(
+                    text = "Loading macronutrients...",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            } else {
+                ProfileCard(label = macronutrientCards[0].first, value = macronutrientCards[0].second)
+            }
             ProfileCard(label = "Weight Unit", value = "Kilograms")
 
             Spacer(modifier = Modifier.height(24.dp))

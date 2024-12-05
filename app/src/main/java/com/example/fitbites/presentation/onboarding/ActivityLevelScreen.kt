@@ -15,7 +15,7 @@ fun ActivityLevelScreen(
     ConfigurableSelectionScreen (
         title = "How active are you?",
         subtitle = "A sedentary person burns fewer calories than an active person",
-        options = listOf("Sedentary", "Low Active", "Active", "Very Active"),
+        options = listOf("Sedentary", "Lightly Active", "Moderately Active", "Very Active", "Extra Active"),
         selectedOption = selectedActivityLevel,
         onOptionSelected = { selectedOption ->
             viewModel.updateActivityLevel(selectedOption)

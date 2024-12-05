@@ -13,9 +13,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 @Composable
-fun AddMealDialog(onDismiss: () -> Unit, onOptionSelected: (String) -> Unit) {
+fun AddMealDialog(onDismiss: () -> Unit, onOptionSelected: (String) -> Unit, navController: NavController) {
     AlertDialog(
         onDismissRequest = onDismiss,
         title = { Text("Add Meal") },
@@ -24,7 +25,7 @@ fun AddMealDialog(onDismiss: () -> Unit, onOptionSelected: (String) -> Unit) {
                 Text("Select an option:")
                 Spacer(modifier = Modifier.height(16.dp))
                 Column {
-                    TextButton(onClick = { onOptionSelected("camera") }) {
+                    TextButton(onClick = { navController.navigate("camera") }) {
                         Icon(Icons.Default.PhotoCamera, contentDescription = "Camera")
                         Text("  Camera")
                     }

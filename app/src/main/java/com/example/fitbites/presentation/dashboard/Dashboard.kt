@@ -117,7 +117,8 @@ fun Dashboard(
             },
             onDismiss = {
                 isDialogVisible = false
-            }
+            },
+            navController = navController
         )
     }
 }

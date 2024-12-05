@@ -1,6 +1,7 @@
 package com.example.fitbites.presentation.profile
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,17 +35,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fitbites.R
+import com.example.fitbites.domain.profile.model.UserProfile
 import com.example.fitbites.navigation.ROUTE_LOGIN
 import com.example.fitbites.presentation.auth.AuthViewModel
 import com.example.fitbites.presentation.splash.SplashScreen
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
+import com.example.fitbites.utils.Response
 
 @Composable
 fun ProfileScreen(
     authViewModel: AuthViewModel = hiltViewModel(),
+    profileViewModel: ProfileViewModel = hiltViewModel(),
     navController: NavController
 ) {
     var isDarkTheme by remember { mutableStateOf(true) }
+    val userProfileState by profileViewModel.userProfileState.collectAsState()
 
     FitbitesmobileTheme(dynamicColor = false) {
         Column(
@@ -74,13 +79,28 @@ fun ProfileScreen(
                 contentScale = ContentScale.Crop
             )
 
-            Text(
-                text = "Strong Joe",
-                color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.titleMedium,
-                fontSize = 20.sp,
-                modifier = Modifier.padding(top = 8.dp)
-            )
+            when (userProfileState) {
+                is Response.Loading -> {
+                }
+                is Response.Success -> {
+                    val userProfile = (userProfileState as Response.Success<UserProfile>).data
+                    Text(
+                        text = userProfile.name,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+                is Response.Error -> {
+                    Text(
+                        text = "Error",
+                        color = Color.Red,
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+                }
+            }
             Text(
                 text = "example@mail.com",
                 color = Color.Gray,

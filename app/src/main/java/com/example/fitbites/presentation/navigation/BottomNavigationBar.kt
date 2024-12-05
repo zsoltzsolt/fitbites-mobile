@@ -88,7 +88,7 @@ fun BottomNavigationBar(
                             when (index) {
                                 0 -> navController.navigate(ROUTE_DASHBOARD)
                                 1 -> navController.navigate(ROUTE_DASHBOARD)
-                                2 -> navController.navigate(ROUTE_DASHBOARD)
+                                2 -> navController.navigate("profile")
                             }
                         },
                         label = {

@@ -3,6 +3,7 @@ package com.example.fitbites.domain.profile.model
 import com.example.fitbites.presentation.onboarding.utils.DailyMacronutrientsGoal
 
 data class UserProfile(
+    val email: String = "",
     val name: String = "",
     val setupComplete: Boolean = false,
     var goal: String = "",

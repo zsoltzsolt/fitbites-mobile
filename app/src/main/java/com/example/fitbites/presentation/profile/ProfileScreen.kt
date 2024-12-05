@@ -101,7 +101,7 @@ fun ProfileScreen(
             }
 
             Text(
-                text = "example@mail.com",
+                text = userProfile?.email ?: "",
                 color = Color.Gray,
                 fontSize = 14.sp,
                 modifier = Modifier.padding(top = 4.dp)

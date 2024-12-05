@@ -95,7 +95,7 @@ class AuthRepositoryImpl @Inject constructor(
                 emailVerificationTask.await()
                 auth.signOut()
 
-                var userProfile = UserProfile(username)
+                var userProfile = UserProfile(email, username)
 
                 firestore.collection("users").document(uid)
                     .set(userProfile)

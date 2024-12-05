@@ -1,6 +1,7 @@
 package com.example.fitbites.presentation.profile
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,17 +35,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fitbites.R
+import com.example.fitbites.domain.profile.model.UserProfile
 import com.example.fitbites.navigation.ROUTE_LOGIN
 import com.example.fitbites.presentation.auth.AuthViewModel
 import com.example.fitbites.presentation.splash.SplashScreen
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
+import com.example.fitbites.utils.Response
 
 @Composable
 fun ProfileScreen(
     authViewModel: AuthViewModel = hiltViewModel(),
+    profileViewModel: ProfileViewModel = hiltViewModel(),
     navController: NavController
 ) {
     var isDarkTheme by remember { mutableStateOf(true) }
+    val userProfileState by profileViewModel.userProfileState.collectAsState()
+
+    val userProfile = getUserProfileFromState(userProfileState)
+
+    val macronutrientCards = userProfile?.dailyMacronutrientsGoal?.let {
+        listOf(
+            "Calorie Intake" to "${it.calories} kCal",
+            "Protein Intake" to "${it.protein} g",
+            "Carbohydrate Intake" to "${it.carbs} g",
+            "Fat Intake" to "${it.fats} g"
+        )
+    }
+
+    val showLoadingMacronutrients = macronutrientCards == null
 
     FitbitesmobileTheme(dynamicColor = false) {
         Column(
@@ -74,15 +92,16 @@ fun ProfileScreen(
                 contentScale = ContentScale.Crop
             )
 
+            userProfile?.let {
+                Text(
+                    text = it.name,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
+
             Text(
-                text = "Strong Joe",
-                color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.titleMedium,
-                fontSize = 20.sp,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-            Text(
-                text = "example@mail.com",
+                text = userProfile?.email ?: "",
                 color = Color.Gray,
                 fontSize = 14.sp,
                 modifier = Modifier.padding(top = 4.dp)
@@ -90,7 +109,14 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            ProfileCard(label = "Calorie Intake", value = "3400 kCal")
+            if (showLoadingMacronutrients) {
+                Text(
+                    text = "Loading macronutrients...",
+                    style = MaterialTheme.typography.bodySmall
+                )
+            } else {
+                ProfileCard(label = macronutrientCards[0].first, value = macronutrientCards[0].second)
+            }
             ProfileCard(label = "Weight Unit", value = "Kilograms")
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -262,5 +288,11 @@ fun ProfileOptionItem(
     }
 }
 
+fun getUserProfileFromState(state: Response<UserProfile>): UserProfile? {
+    return when (state) {
+        is Response.Success -> state.data
+        else -> null
+    }
+}
 
 

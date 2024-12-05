@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fitbites.domain.profile.model.UserProfile
 import com.example.fitbites.domain.profile.usecase.ProfileUseCases
+import com.example.fitbites.presentation.onboarding.utils.DailyMacronutrientsGoal
 import com.example.fitbites.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +29,13 @@ class ProfileViewModel @Inject constructor(
             profileUseCases.fetchProfile().collect { response ->
                 _userProfileState.value = response
             }
+        }
+    }
+
+    fun getUserProfileFromState(state: Response<UserProfile>): UserProfile? {
+        return when (state) {
+            is Response.Success -> state.data
+            else -> null
         }
     }
 }

@@ -51,9 +51,7 @@ fun ProfileScreen(
     var isDarkTheme by remember { mutableStateOf(true) }
     val userProfileState by profileViewModel.userProfileState.collectAsState()
 
-    val userProfile = if (userProfileState is Response.Success) {
-        (userProfileState as Response.Success).data
-    } else null
+    val userProfile = getUserProfileFromState(userProfileState)
 
     val macronutrientCards = userProfile?.dailyMacronutrientsGoal?.let {
         listOf(
@@ -290,5 +288,11 @@ fun ProfileOptionItem(
     }
 }
 
+fun getUserProfileFromState(state: Response<UserProfile>): UserProfile? {
+    return when (state) {
+        is Response.Success -> state.data
+        else -> null
+    }
+}
 
 

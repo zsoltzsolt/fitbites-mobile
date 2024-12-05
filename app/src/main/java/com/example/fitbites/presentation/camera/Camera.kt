@@ -8,8 +8,6 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -20,25 +18,22 @@ import java.io.File
 import java.util.concurrent.ExecutionException
 import android.Manifest
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Camera
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material.icons.filled.AddPhotoAlternate
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.sp
+import com.example.fitbites.ui.theme.FitbitesmobileTheme
 
 
 @Composable
@@ -81,7 +76,7 @@ fun CameraScreen() {
             imageCapture = capture
         }
 
-        CaptureButton(onClick = {
+        CaptureButton(onCaptureClick = {
             imageCapture?.let {
                 capturePhoto(it, context)
             }
@@ -150,20 +145,56 @@ private fun hasCameraPermission(context: Context): Boolean {
 }
 
 @Composable
-fun CaptureButton(onClick: () -> Unit) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        FloatingActionButton(
-            onClick = { onClick() },
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .padding(16.dp),
-            containerColor = Color.Green
-        ) {
-            Icon(
-                imageVector = Icons.Default.Camera,
-                contentDescription = "Capture Photo",
-                tint = Color.White
+fun CaptureButton(onCaptureClick:() -> Unit) {
+    FitbitesmobileTheme(dynamicColor = false) {
+        Box(modifier = Modifier.fillMaxSize()) {
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .height((0.2f * LocalConfiguration.current.screenHeightDp).dp)
+                    .background(MaterialTheme.colorScheme.background)
             )
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = (0.075 * LocalConfiguration.current.screenHeightDp).dp)
+                    .size(70.dp)
+                    .background(MaterialTheme.colorScheme.onPrimary, CircleShape)
+                    .border(4.dp, Color.Green, CircleShape)
+                    .clickable(onClick = onCaptureClick)
+            )
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(
+                        bottom = (0.075 * LocalConfiguration.current.screenHeightDp).dp,
+                        end = (0.1 * LocalConfiguration.current.screenWidthDp).dp
+                    )
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.clickable(onClick = {  })
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.AddPhotoAlternate,
+                        contentDescription = "Upload Image",
+                        tint = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Upload Image",
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        fontSize = 10.sp
+                    )
+                }
+            }
         }
     }
 }
+
+

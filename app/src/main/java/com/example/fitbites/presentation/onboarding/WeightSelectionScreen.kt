@@ -16,6 +16,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fitbites.navigation.ROUTE_DASHBOARD
 import com.example.fitbites.presentation.components.GradientButton
+import com.example.fitbites.presentation.onboarding.utils.calculateMacronutrientIntake
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
 
 @Composable
@@ -53,8 +54,8 @@ fun WeightSelectionScreen(
                 text = "Next",
                 onClick = {
                     viewModel.updateSetupStatus(true)
-                    Log.d("USER_PROFILE", "User profile: ${viewModel.userProfile.value}")
-                    viewModel.updateProfile(viewModel.userProfile.value)
+                    viewModel.updateDailyMacronutrientsGoal()
+                    viewModel.updateProfile()
                     navController.navigate(ROUTE_DASHBOARD)
                 },
                 modifier = Modifier.padding(horizontal = 30.dp)

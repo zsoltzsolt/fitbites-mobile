@@ -26,14 +26,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.fitbites.domain.profile.model.UserProfile
+import com.example.fitbites.presentation.profile.ProfileViewModel
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
+import com.example.fitbites.utils.Response
 
 @Composable
 fun Dashboard(
+    profileViewModel: ProfileViewModel = hiltViewModel(),
     navController: NavController
 ) {
     val scrollState = rememberScrollState()
     var isDialogVisible by remember { mutableStateOf(false) }
+    val userProfileState by profileViewModel.userProfileState.collectAsState()
+    val userProfile = getUserProfileFromState(userProfileState)
 
     Column(
         modifier = Modifier
@@ -50,10 +56,10 @@ fun Dashboard(
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
             SummaryCard(
-                proteins = 150 to 225,
-                fats = 30 to 118,
-                carbs = 319 to 340,
-                calories = 2456 to 3400
+                proteins = 150 to (userProfile?.dailyMacronutrientsGoal?.protein ?: 0),
+                fats = 30 to (userProfile?.dailyMacronutrientsGoal?.fats ?: 0),
+                carbs = 319 to (userProfile?.dailyMacronutrientsGoal?.carbs ?: 0),
+                calories = 2456 to (userProfile?.dailyMacronutrientsGoal?.calories ?: 0)
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
@@ -120,5 +126,10 @@ fun Dashboard(
             },
             navController = navController
         )
+
+fun getUserProfileFromState(state: Response<UserProfile>): UserProfile? {
+    return when (state) {
+        is Response.Success -> state.data
+        else -> null
     }
 }

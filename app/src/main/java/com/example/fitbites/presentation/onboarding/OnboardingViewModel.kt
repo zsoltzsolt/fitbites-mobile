@@ -7,6 +7,8 @@ import com.example.fitbites.domain.profile.usecase.ProfileUseCases
 import javax.inject.Inject
 import androidx.lifecycle.viewModelScope
 import com.example.fitbites.domain.profile.model.UserProfile
+import com.example.fitbites.presentation.onboarding.utils.DailyMacronutrientsGoal
+import com.example.fitbites.presentation.onboarding.utils.calculateMacronutrientIntake
 import com.example.fitbites.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -47,9 +49,13 @@ class OnboardingViewModel @Inject constructor(
         userProfile.value = userProfile.value.copy(setupComplete = setupStatus)
     }
 
-    fun updateProfile(userProfile: UserProfile) {
+    fun updateDailyMacronutrientsGoal(){
+        userProfile.value = userProfile.value.copy(dailyMacronutrientsGoal = calculateMacronutrientIntake(userProfile.value))
+    }
+
+    fun updateProfile() {
         viewModelScope.launch {
-            profileUseCases.updateProfile(userProfile).collect { response ->
+            profileUseCases.updateProfile(userProfile.value).collect { response ->
                 when (response) {
                     is Response.Loading -> {  }
                     is Response.Success -> {

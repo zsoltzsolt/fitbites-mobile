@@ -11,11 +11,10 @@ fun GoalScreen(
     navController: NavController
 ) {
     val selectedGoal = viewModel.userProfile.value.goal
-
     ConfigurableSelectionScreen(
         title = "What's your goal?",
         subtitle = "We will calculate daily calories according to your goal",
-        options = listOf("Lose weight", "Keep weight", "Gain weight"),
+        options = listOf("Weight Loss" ,"Maintenance" ,"Recomposition", "Muscle Gain", "Weight Gain"),
         selectedOption = selectedGoal,
         onOptionSelected = { selectedOption ->
             viewModel.updateGoal(selectedOption)

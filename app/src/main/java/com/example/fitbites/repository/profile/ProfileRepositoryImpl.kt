@@ -72,6 +72,7 @@ class ProfileRepositoryImpl @Inject constructor(
                     updateData["age"] = userProfile.age
                 }
                 updateData["setupComplete"] = userProfile.setupComplete
+                updateData["dailyMacronutrientsGoal"] = userProfile.dailyMacronutrientsGoal
 
                 if (updateData.isNotEmpty()) {
                     userDocRef.update(updateData).await()

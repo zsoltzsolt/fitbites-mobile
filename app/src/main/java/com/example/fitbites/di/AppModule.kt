@@ -14,11 +14,18 @@ import com.example.fitbites.domain.auth.usecase.SignOut
 import com.example.fitbites.domain.auth.usecase.SignUp
 import com.example.fitbites.domain.auth.usecase.SignUpWithFacebook
 import com.example.fitbites.domain.auth.usecase.SignUpWithGoogle
+import com.example.fitbites.domain.dashboard.repository.DashboardRepository
+import com.example.fitbites.domain.dashboard.usecase.DashboardUseCases
+import com.example.fitbites.domain.dashboard.usecase.DecrementDailyWaterIntake
+import com.example.fitbites.domain.dashboard.usecase.GetCurrentWaterIntake
+import com.example.fitbites.domain.dashboard.usecase.IncrementDailyWaterIntake
+import com.example.fitbites.domain.dashboard.usecase.InitializeDailyWaterIntake
 import com.example.fitbites.domain.profile.repository.ProfileRepository
 import com.example.fitbites.domain.profile.usecase.DeleteProfile
 import com.example.fitbites.domain.profile.usecase.FetchProfile
 import com.example.fitbites.domain.profile.usecase.ProfileUseCases
 import com.example.fitbites.domain.profile.usecase.UpdateProfile
+import com.example.fitbites.repository.dashboard.DashboardRepositoryImpl
 import com.example.fitbites.repository.profile.ProfileRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -51,6 +58,12 @@ object AppModule {
     ): ProfileRepository = ProfileRepositoryImpl(auth, firestore)
 
     @Provides
+    fun provideDashboardRepository(
+        auth: FirebaseAuth,
+        firestore: FirebaseFirestore
+    ): DashboardRepository = DashboardRepositoryImpl(auth, firestore)
+
+    @Provides
     fun provideAuthScreenUseCase(authRepository: AuthRepository) = AuthUseCases(
         isUserAuthenticated = IsUserAuthenticated(authRepository),
         isSetupCompleted = IsSetupCompleted(authRepository),
@@ -71,5 +84,15 @@ object AppModule {
         updateProfile = UpdateProfile(profileRepository),
         deleteProfile = DeleteProfile(profileRepository)
     )
+
+    @Provides
+    fun provideDashboardUseCases(repository: DashboardRepository): DashboardUseCases {
+        return DashboardUseCases(
+            initializeDailyWaterIntake = InitializeDailyWaterIntake(repository),
+            incrementDailyWaterIntake = IncrementDailyWaterIntake(repository),
+            decrementDailyWaterIntake = DecrementDailyWaterIntake(repository),
+            getCurrentWaterIntake = GetCurrentWaterIntake(repository)
+        )
+    }
 
 }

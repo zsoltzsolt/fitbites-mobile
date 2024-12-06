@@ -35,12 +35,18 @@ import com.example.fitbites.utils.Response
 @Composable
 fun Dashboard(
     profileViewModel: ProfileViewModel = hiltViewModel(),
+    dashboardViewModel: DashboardViewModel = hiltViewModel(),
     navController: NavController
 ) {
     val scrollState = rememberScrollState()
     var isDialogVisible by remember { mutableStateOf(false) }
     val userProfileState by profileViewModel.userProfileState.collectAsState()
     val userProfile = getUserProfileFromState(userProfileState)
+    val waterIntake by dashboardViewModel.waterIntakeState
+
+    LaunchedEffect(Unit) {
+        dashboardViewModel.initializeDailyWaterIntake()
+    }
 
     Column(
         modifier = Modifier
@@ -70,11 +76,11 @@ fun Dashboard(
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
             WaterTrackerCard(
-                0f,
+                waterIntake,
                 (userProfile?.dailyWaterGoal ?: 2.5).toFloat(),
                 "10:45AM",
-                {},
-                {}
+                {dashboardViewModel.incrementDailyWaterIntake()},
+                {dashboardViewModel.decrementDailyWaterIntake()}
             )
             Spacer(modifier = Modifier.height(10.dp))
             Row(

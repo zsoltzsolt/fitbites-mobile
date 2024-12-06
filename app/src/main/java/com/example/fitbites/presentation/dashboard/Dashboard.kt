@@ -25,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fitbites.domain.profile.model.UserProfile
 import com.example.fitbites.presentation.profile.ProfileViewModel
@@ -38,6 +37,7 @@ fun Dashboard(
     navController: NavController
 ) {
     val scrollState = rememberScrollState()
+    var isDialogVisible by remember { mutableStateOf(false) }
     val userProfileState by profileViewModel.userProfileState.collectAsState()
     val userProfile = getUserProfileFromState(userProfileState)
 
@@ -90,7 +90,9 @@ fun Dashboard(
                 )
                 IconButton(
                     modifier = Modifier.padding(horizontal = 25.dp),
-                    onClick = {}
+                    onClick = {
+                        isDialogVisible = true
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
@@ -112,7 +114,18 @@ fun Dashboard(
             )
         }
     }
-}
+
+    if (isDialogVisible) {
+        AddMealDialog (
+            onOptionSelected = { option ->
+                isDialogVisible = false
+                println("Selected: $option")
+            },
+            onDismiss = {
+                isDialogVisible = false
+            },
+            navController = navController
+        )
 
 fun getUserProfileFromState(state: Response<UserProfile>): UserProfile? {
     return when (state) {

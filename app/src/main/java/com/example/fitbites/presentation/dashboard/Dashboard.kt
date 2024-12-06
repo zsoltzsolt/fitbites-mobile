@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fitbites.domain.profile.model.UserProfile
 import com.example.fitbites.presentation.profile.ProfileViewModel
@@ -69,8 +70,8 @@ fun Dashboard(
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
             WaterTrackerCard(
-                1.9f,
-                2.5f,
+                0f,
+                (userProfile?.dailyWaterGoal ?: 2.5).toFloat(),
                 "10:45AM",
                 {},
                 {}
@@ -116,7 +117,7 @@ fun Dashboard(
     }
 
     if (isDialogVisible) {
-        AddMealDialog (
+        AddMealDialog(
             onOptionSelected = { option ->
                 isDialogVisible = false
                 println("Selected: $option")
@@ -126,7 +127,8 @@ fun Dashboard(
             },
             navController = navController
         )
-
+    }
+}
 fun getUserProfileFromState(state: Response<UserProfile>): UserProfile? {
     return when (state) {
         is Response.Success -> state.data

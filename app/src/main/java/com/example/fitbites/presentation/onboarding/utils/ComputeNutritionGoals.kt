@@ -1,6 +1,8 @@
 package com.example.fitbites.presentation.onboarding.utils
 
 import com.example.fitbites.domain.profile.model.UserProfile
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 data class DailyMacronutrientsGoal(
     val calories: Int = 0,
@@ -62,5 +64,12 @@ fun calculateMacronutrientIntake(userProfile: UserProfile): DailyMacronutrientsG
         carbs = carbGrams,
         fats = fatGrams
     )
+}
+
+fun calculateWaterIntake(userProfile: UserProfile): Float {
+    val waterIntake = userProfile.weight * 0.033f
+    return BigDecimal(waterIntake.toDouble())
+        .setScale(1, RoundingMode.HALF_UP)
+        .toFloat()
 }
 

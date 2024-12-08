@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.fitbites.domain.profile.model.UserProfile
 import com.example.fitbites.presentation.onboarding.utils.DailyMacronutrientsGoal
 import com.example.fitbites.presentation.onboarding.utils.calculateMacronutrientIntake
+import com.example.fitbites.presentation.onboarding.utils.calculateWaterIntake
 import com.example.fitbites.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -51,6 +52,10 @@ class OnboardingViewModel @Inject constructor(
 
     fun updateDailyMacronutrientsGoal(){
         userProfile.value = userProfile.value.copy(dailyMacronutrientsGoal = calculateMacronutrientIntake(userProfile.value))
+    }
+
+    fun updateDailyWatersGoal(){
+        userProfile.value = userProfile.value.copy(dailyWaterGoal = calculateWaterIntake(userProfile.value))
     }
 
     fun updateProfile() {

@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,7 +61,7 @@ fun WaterTrackerCard(
                             fontSize = 14.sp,
                         )
                         Text(
-                            text = String.format("%.1f / %.1f L", currentWater, goalWater),
+                            text = String.format("%.2f / %.1f L", currentWater, goalWater),
                             color = MaterialTheme.colorScheme.onPrimary,
                             fontSize = 16.sp,
                         )
@@ -84,7 +85,7 @@ fun WaterTrackerCard(
                                         .padding(6.dp)
                                 ) {
                                     IconButton(
-                                        onClick = onIncrease,
+                                        onClick = {onIncrease()},
                                         modifier = Modifier.fillMaxSize(),
                                         content = {
                                             Icon(
@@ -106,7 +107,7 @@ fun WaterTrackerCard(
                                         .padding(6.dp)
                                 ) {
                                     IconButton(
-                                        onClick = onDecrease,
+                                        onClick = {onDecrease()},
                                         modifier = Modifier.fillMaxSize(),
                                         content = {
                                             Icon(
@@ -134,13 +135,10 @@ fun WaterTrackerCard(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .fillMaxHeight((currentWater / goalWater).coerceIn(0f, 1f))
+                                        .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
                                         .background(
                                             Brush.verticalGradient(
                                                 listOf(Color(0xFF42A5F5), Color(0xFF80D8FF))
-                                            ),
-                                            shape = RoundedCornerShape(
-                                                bottomStart = 20.dp,
-                                                bottomEnd = 20.dp
                                             )
                                         )
                                 )
@@ -154,8 +152,6 @@ fun WaterTrackerCard(
                                         .padding(4.dp)
                                 )
                             }
-
-
                         }
                     }
                 }
@@ -184,30 +180,31 @@ fun WaterTrackerCard(
     }
 }
 
-@Preview(name = "Light Mode", showBackground = true)
-@Composable
-fun WaterTrackerCardLightPreview() {
-    FitbitesmobileTheme(darkTheme = false, dynamicColor = false) {
-        WaterTrackerCard(
-            currentWater = 1.9f,
-            goalWater = 2.5f,
-            lastUpdateTime = "10:45 AM",
-            onIncrease = {},
-            onDecrease = {}
-        )
-    }
-}
 
-@Preview(name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Composable
-fun WaterTrackerCardDarkPreview() {
-    FitbitesmobileTheme(darkTheme = true, dynamicColor = false) {
-        WaterTrackerCard(
-            currentWater = 1.9f,
-            goalWater = 2.5f,
-            lastUpdateTime = "10:45 AM",
-            onIncrease = {},
-            onDecrease = {}
-        )
-    }
-}
+//@Preview(name = "Light Mode", showBackground = true)
+//@Composable
+//fun WaterTrackerCardLightPreview() {
+//    FitbitesmobileTheme(darkTheme = false, dynamicColor = false) {
+//        WaterTrackerCard(
+//            currentWater = 1.9f,
+//            goalWater = 2.5f,
+//            lastUpdateTime = "10:45 AM",
+//            onIncrease = {},
+//            onDecrease = {}
+//        )
+//    }
+//}
+//
+//@Preview(name = "Dark Mode", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+//@Composable
+//fun WaterTrackerCardDarkPreview() {
+//    FitbitesmobileTheme(darkTheme = true, dynamicColor = false) {
+//        WaterTrackerCard(
+//            currentWater = 1.9f,
+//            goalWater = 2.5f,
+//            lastUpdateTime = "10:45 AM",
+//            onIncrease = {},
+//            onDecrease = {}
+//        )
+//    }
+//}

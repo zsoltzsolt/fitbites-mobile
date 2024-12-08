@@ -12,5 +12,6 @@ data class UserProfile(
     var height: Int = 170,
     var weight: Int = 0,
     var age: Int = 0,
-    var dailyMacronutrientsGoal: DailyMacronutrientsGoal = DailyMacronutrientsGoal()
+    var dailyMacronutrientsGoal: DailyMacronutrientsGoal = DailyMacronutrientsGoal(),
+    var dailyWaterGoal: Float = 2.5f
 )

@@ -1,5 +1,6 @@
 package com.example.fitbites.repository.profile
 
+import android.util.Log
 import com.example.fitbites.domain.profile.model.UserProfile
 import com.example.fitbites.domain.profile.repository.ProfileRepository
 import com.example.fitbites.utils.Response
@@ -8,6 +9,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -73,6 +77,7 @@ class ProfileRepositoryImpl @Inject constructor(
                 }
                 updateData["setupComplete"] = userProfile.setupComplete
                 updateData["dailyMacronutrientsGoal"] = userProfile.dailyMacronutrientsGoal
+                updateData["dailyWaterGoal"] = userProfile.dailyWaterGoal
 
                 if (updateData.isNotEmpty()) {
                     userDocRef.update(updateData).await()
@@ -92,4 +97,5 @@ class ProfileRepositoryImpl @Inject constructor(
     override suspend fun deleteProfile(): Flow<Response<Boolean>> = flow {
         emit(Response.Error("Not implemented"))
     }
+
 }

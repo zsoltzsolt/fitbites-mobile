@@ -1,5 +1,6 @@
 package com.example.fitbites.presentation.profile
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fitbites.domain.profile.model.UserProfile
@@ -38,5 +39,6 @@ class ProfileViewModel @Inject constructor(
             else -> null
         }
     }
+
 }
 

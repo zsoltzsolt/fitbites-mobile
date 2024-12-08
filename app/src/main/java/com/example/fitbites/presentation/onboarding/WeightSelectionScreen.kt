@@ -46,7 +46,10 @@ fun WeightSelectionScreen(
 
                 WeightSelectorWithDropdown(
                     weight = selectedWeight.toString(),
-                    onWeightUpdated = { weight -> viewModel.updateWeight(weight) }
+                    onWeightUpdated = { weight ->
+                        viewModel.updateWeight(weight)
+                        viewModel.updateDailyWatersGoal()
+                    }
                 )
             }
 

@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fitbites.domain.profile.model.UserProfile
 import com.example.fitbites.presentation.profile.ProfileViewModel
@@ -34,12 +35,19 @@ import com.example.fitbites.utils.Response
 @Composable
 fun Dashboard(
     profileViewModel: ProfileViewModel = hiltViewModel(),
+    dashboardViewModel: DashboardViewModel = hiltViewModel(),
     navController: NavController
 ) {
     val scrollState = rememberScrollState()
     var isDialogVisible by remember { mutableStateOf(false) }
     val userProfileState by profileViewModel.userProfileState.collectAsState()
     val userProfile = getUserProfileFromState(userProfileState)
+    val waterIntake by dashboardViewModel.waterIntakeState
+    val lastUpdateTime by dashboardViewModel.lastUpdateTime
+
+    LaunchedEffect(Unit) {
+        dashboardViewModel.initializeDailyWaterIntake()
+    }
 
     Column(
         modifier = Modifier
@@ -69,11 +77,11 @@ fun Dashboard(
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
             WaterTrackerCard(
-                1.9f,
-                2.5f,
-                "10:45AM",
-                {},
-                {}
+                waterIntake,
+                (userProfile?.dailyWaterGoal ?: 2.5).toFloat(),
+                lastUpdateTime,
+                {dashboardViewModel.incrementDailyWaterIntake()},
+                {dashboardViewModel.decrementDailyWaterIntake()}
             )
             Spacer(modifier = Modifier.height(10.dp))
             Row(
@@ -116,7 +124,7 @@ fun Dashboard(
     }
 
     if (isDialogVisible) {
-        AddMealDialog (
+        AddMealDialog(
             onOptionSelected = { option ->
                 isDialogVisible = false
                 println("Selected: $option")
@@ -126,7 +134,8 @@ fun Dashboard(
             },
             navController = navController
         )
-
+    }
+}
 fun getUserProfileFromState(state: Response<UserProfile>): UserProfile? {
     return when (state) {
         is Response.Success -> state.data

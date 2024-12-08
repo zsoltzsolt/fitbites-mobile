@@ -9,6 +9,9 @@ import com.example.fitbites.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,6 +20,9 @@ class DashboardViewModel @Inject constructor(
 ) : ViewModel() {
 
     var waterIntakeState = mutableStateOf(0f)
+        private set
+
+    var lastUpdateTime = mutableStateOf("")
         private set
 
     var isLoading = mutableStateOf(false)
@@ -30,12 +36,11 @@ class DashboardViewModel @Inject constructor(
             dashboardUseCases.getCurrentWaterIntake().collect { response ->
                 when (response) {
                     is Response.Success -> {
-                        waterIntakeState.value = response.data
-                        Log.d("Dashboard", "Current water intake fetched: ${response.data} L.")
+                        waterIntakeState.value = response.data.waterIntake
+                        lastUpdateTime.value = response.data.lastUpdateTime
                     }
                     is Response.Error -> {
                         errorMessage.value = response.message
-                        Log.e("Dashboard", "Failed to fetch water intake: ${response.message}")
                     }
                     is Response.Loading -> {  }
                 }
@@ -51,15 +56,13 @@ class DashboardViewModel @Inject constructor(
                     is Response.Success -> {
                         if (response.data == true) {
                             waterIntakeState.value = 0f
-                            Log.d("Dashboard", "Water intake initialized to 0.")
+                            lastUpdateTime.value = ""
                         } else {
                             fetchCurrentWaterIntake()
-                            Log.d("Dashboard", "Water intake already initialized.")
                         }
                     }
                     is Response.Error -> {
                         errorMessage.value = response.message
-                        Log.e("Dashboard", "Failed to initialize water intake: ${response.message}")
                     }
                     is Response.Loading -> {  }
                 }
@@ -74,7 +77,9 @@ class DashboardViewModel @Inject constructor(
             dashboardUseCases.incrementDailyWaterIntake().collect { response ->
                 when (response) {
                     is Response.Success -> {
+                        val currentTime = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
                         waterIntakeState.value += 0.25f
+                        lastUpdateTime.value = currentTime
                         Log.d("Dashboard", "Water intake incremented.")
                     }
                     is Response.Error -> {
@@ -94,7 +99,9 @@ class DashboardViewModel @Inject constructor(
             dashboardUseCases.decrementDailyWaterIntake().collect { response ->
                 when (response) {
                     is Response.Success -> {
+                        val currentTime = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
                         waterIntakeState.value = (waterIntakeState.value - 0.25f).coerceAtLeast(0f)
+                        lastUpdateTime.value = currentTime
                         Log.d("Dashboard", "Water intake decremented.")
                     }
                     is Response.Error -> {

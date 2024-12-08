@@ -1,5 +1,6 @@
 package com.example.fitbites.repository.dashboard
 
+import com.example.fitbites.domain.dashboard.model.DailyWaterIntake
 import com.example.fitbites.domain.dashboard.repository.DashboardRepository
 import com.example.fitbites.utils.Response
 import com.google.firebase.auth.FirebaseAuth
@@ -29,10 +30,11 @@ class DashboardRepositoryImpl @Inject constructor(
         try {
             val documentSnapshot = waterIntakeRef.get().await()
             if (!documentSnapshot.exists()) {
-                val initialData = mapOf(
-                    "date" to date,
-                    "waterIntake" to 0f
-                )
+                val initialData = DailyWaterIntake(
+                        date = date,
+                        waterIntake = 0f,
+                        lastUpdateTime = ""
+                        )
                 waterIntakeRef.set(initialData).await()
                 emit(Response.Success(true))
             } else {
@@ -52,13 +54,18 @@ class DashboardRepositoryImpl @Inject constructor(
             .collection("waterIntakeHistory").document(date)
 
         try {
+            val currentTime = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
             firestore.runTransaction { transaction ->
                 val snapshot = transaction.get(waterIntakeRef)
                 val currentIntake = snapshot.getDouble("waterIntake") ?: 0.0
                 val updatedIntake = currentIntake + 0.25
                 transaction.set(
                     waterIntakeRef,
-                    mapOf("date" to date, "waterIntake" to updatedIntake),
+                    DailyWaterIntake(
+                        date = date,
+                        waterIntake = updatedIntake.toFloat(),
+                        lastUpdateTime = currentTime
+                    ),
                     SetOptions.merge()
                 )
             }.await()
@@ -75,13 +82,18 @@ class DashboardRepositoryImpl @Inject constructor(
             .collection("waterIntakeHistory").document(date)
 
         try {
+            val currentTime = SimpleDateFormat("hh:mm a", Locale.getDefault()).format(Date())
             firestore.runTransaction { transaction ->
                 val snapshot = transaction.get(waterIntakeRef)
                 val currentIntake = snapshot.getDouble("waterIntake") ?: 0.0
                 val updatedIntake = (currentIntake - 0.25).coerceAtLeast(0.0)
                 transaction.set(
                     waterIntakeRef,
-                    mapOf("date" to date, "waterIntake" to updatedIntake),
+                    DailyWaterIntake(
+                        date = date,
+                        waterIntake = updatedIntake.toFloat(),
+                        lastUpdateTime = currentTime
+                    ),
                     SetOptions.merge()
                 )
             }.await()
@@ -91,7 +103,7 @@ class DashboardRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCurrentWaterIntake(): Flow<Response<Float>> = flow {
+    override suspend fun getCurrentWaterIntake(): Flow<Response<DailyWaterIntake>> = flow {
         val userId = auth.currentUser?.uid ?: return@flow emit(Response.Error("User not authenticated"))
         val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         val waterIntakeRef = firestore.collection("users").document(userId)
@@ -101,10 +113,17 @@ class DashboardRepositoryImpl @Inject constructor(
             val documentSnapshot = waterIntakeRef.get().await()
 
             if (documentSnapshot.exists()) {
-                val currentIntake = documentSnapshot.getDouble("waterIntake")?.toFloat() ?: 0f
-                emit(Response.Success(currentIntake))
+                val waterIntake = documentSnapshot.getDouble("waterIntake")?.toFloat() ?: 0f
+                val lastUpdateTime = documentSnapshot.getString("lastUpdateTime") ?: "Not available"
+
+                val dailyWaterIntake = DailyWaterIntake(
+                    date = date,
+                    waterIntake = waterIntake,
+                    lastUpdateTime = lastUpdateTime
+                )
+                emit(Response.Success(dailyWaterIntake))
             } else {
-                emit(Response.Success(0f))
+                emit(Response.Success(DailyWaterIntake()))
             }
         } catch (e: Exception) {
             emit(Response.Error(e.message ?: "Failed to fetch current water intake"))

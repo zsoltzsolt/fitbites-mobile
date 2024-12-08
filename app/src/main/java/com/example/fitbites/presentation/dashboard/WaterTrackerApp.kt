@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,7 +61,7 @@ fun WaterTrackerCard(
                             fontSize = 14.sp,
                         )
                         Text(
-                            text = String.format("%.1f / %.1f L", currentWater, goalWater),
+                            text = String.format("%.2f / %.1f L", currentWater, goalWater),
                             color = MaterialTheme.colorScheme.onPrimary,
                             fontSize = 16.sp,
                         )
@@ -134,13 +135,10 @@ fun WaterTrackerCard(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .fillMaxHeight((currentWater / goalWater).coerceIn(0f, 1f))
+                                        .clip(RoundedCornerShape(bottomStart = 20.dp, bottomEnd = 20.dp))
                                         .background(
                                             Brush.verticalGradient(
                                                 listOf(Color(0xFF42A5F5), Color(0xFF80D8FF))
-                                            ),
-                                            shape = RoundedCornerShape(
-                                                bottomStart = 20.dp,
-                                                bottomEnd = 20.dp
                                             )
                                         )
                                 )
@@ -154,8 +152,6 @@ fun WaterTrackerCard(
                                         .padding(4.dp)
                                 )
                             }
-
-
                         }
                     }
                 }
@@ -183,6 +179,7 @@ fun WaterTrackerCard(
         }
     }
 }
+
 
 //@Preview(name = "Light Mode", showBackground = true)
 //@Composable

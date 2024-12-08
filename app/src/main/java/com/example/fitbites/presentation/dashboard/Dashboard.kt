@@ -43,6 +43,7 @@ fun Dashboard(
     val userProfileState by profileViewModel.userProfileState.collectAsState()
     val userProfile = getUserProfileFromState(userProfileState)
     val waterIntake by dashboardViewModel.waterIntakeState
+    val lastUpdateTime by dashboardViewModel.lastUpdateTime
 
     LaunchedEffect(Unit) {
         dashboardViewModel.initializeDailyWaterIntake()
@@ -78,7 +79,7 @@ fun Dashboard(
             WaterTrackerCard(
                 waterIntake,
                 (userProfile?.dailyWaterGoal ?: 2.5).toFloat(),
-                "10:45AM",
+                lastUpdateTime,
                 {dashboardViewModel.incrementDailyWaterIntake()},
                 {dashboardViewModel.decrementDailyWaterIntake()}
             )

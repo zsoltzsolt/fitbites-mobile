@@ -62,7 +62,7 @@ fun LoginScreen(
     var passwordVisible by remember { mutableStateOf(false) }
 
     val isUserAuthenticated = authViewModel.isUserAuthenticatedState.value
-    val isSetupCompleted by authViewModel.isSetupComplete.collectAsState()
+    val isSetupCompleted = authViewModel.isSetupComplete.value
     val context = LocalContext.current
 
     val googleSignInClient = remember {
@@ -111,6 +111,7 @@ fun LoginScreen(
 
 
     LaunchedEffect(isUserAuthenticated, isSetupCompleted) {
+        delay(500)
         if (isUserAuthenticated) {
             if (isSetupCompleted) {
                 Log.d("AUTH", "Setup is complete, navigating to dashboard")

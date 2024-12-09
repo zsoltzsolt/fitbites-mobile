@@ -61,7 +61,7 @@ fun WeightSelectionScreen(
                     viewModel.updateProfile()
                     navController.navigate(ROUTE_DASHBOARD)
                 },
-                modifier = Modifier.padding(horizontal = 30.dp)
+                modifier = Modifier.padding(horizontal = 30.dp, vertical = 30.dp)
             )
         }
     }

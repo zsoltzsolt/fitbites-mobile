@@ -146,7 +146,7 @@ fun LoginScreen(
                 value = email,
                 onValueChange = { email = it },
                 label = "Email",
-                trailingIcon = { Icon(Icons.Default.Email, contentDescription = "Email Icon") }
+                trailingIcon = { Icon(Icons.Default.Email, contentDescription = "Email Icon", modifier = Modifier.size(22.dp)) }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -157,15 +157,16 @@ fun LoginScreen(
                 label = "Password",
                 isPassword = true,
                 isPasswordVisible = passwordVisible,
-                onPasswordVisibilityChange = { passwordVisible = !passwordVisible }
+                onPasswordVisibilityChange = { passwordVisible = !passwordVisible },
             )
 
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
                 text = stringResource(R.string.forgot_password),
-                color = Color.Green,
-                fontSize = 14.sp,
+                color = Color(0xFF16DB16),
+                style = MaterialTheme.typography.headlineSmall,
+                fontSize = 13.sp,
                 modifier = Modifier
                     .align(Alignment.End)
                     .clickable { authViewModel.sendPasswordResetEmail(email) }

@@ -74,7 +74,7 @@ fun SplashScreen(
                 style = MaterialTheme.typography.headlineLarge,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .offset(y = -verticalOffset.dp)
+                    .offset(y = -40.dp)
             )
             Text(
                 text = "Version 1.0",
@@ -82,7 +82,7 @@ fun SplashScreen(
                 style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .offset(y = -verticalOffset.dp + 20.dp)
+                    .offset(y = -20.dp)
             )
         }
     }

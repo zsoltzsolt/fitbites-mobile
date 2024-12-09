@@ -39,7 +39,7 @@ fun ConfigurableSelectionScreen(
             modifier = Modifier
                 .background(MaterialTheme.colorScheme.background)
                 .fillMaxSize()
-                .padding(horizontal = 16.dp, vertical = 60.dp),
+                .padding(horizontal = 16.dp, vertical = 10.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column(
@@ -62,7 +62,7 @@ fun ConfigurableSelectionScreen(
             GradientButton(
                 text = "Next",
                 onClick = onNextClicked,
-                modifier = Modifier.padding(horizontal = 30.dp)
+                modifier = Modifier.padding(horizontal = 30.dp, vertical = 30.dp)
             )
         }
     }

@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -23,21 +24,28 @@ fun AuthFooter(
 ) {
     Row(
         horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxWidth().padding(bottom = 30.dp)
+        verticalAlignment = androidx.compose.ui.Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
     ) {
         Text(
             text = message,
-            color = MaterialTheme.colorScheme.onSecondary,
-            fontSize = 14.sp
+            style = MaterialTheme.typography.headlineSmall,
+            fontSize = 13.sp,
         )
 
         Spacer(modifier = Modifier.width(4.dp))
 
         Text(
             text = actionText,
-            color = Color.Green,
-            fontSize = 14.sp,
+            color = Color(0xFF16DB16),
+            fontSize = 13.sp,
             modifier = Modifier.clickable { onActionClick() }
         )
     }
+}
+
+@Preview
+@Composable
+private fun AUthFooterPreview() {
+    AuthFooter("Already have an account? ", "Sign in", {})
 }

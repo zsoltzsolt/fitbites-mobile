@@ -44,14 +44,14 @@ fun SocialMediaSection(
             Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.weight(1f))
             Text(
                 text = text,
-                color = MaterialTheme.colorScheme.onSecondary,
-                fontSize = 14.sp,
+                style = MaterialTheme.typography.headlineSmall,
+                fontSize = 13.sp,
                 modifier = Modifier.padding(horizontal = 8.dp)
             )
             Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.weight(1f))
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
@@ -89,7 +89,7 @@ fun SocialMediaIcon(
         painter = painterResource(id = iconRes),
         contentDescription = contentDescription,
         modifier = modifier
-            .size(40.dp)
+            .size(35.dp)
             .clickable { onClick() },
         tint = Color.Unspecified
     )

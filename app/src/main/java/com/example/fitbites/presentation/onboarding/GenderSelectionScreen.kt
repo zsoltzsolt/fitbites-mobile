@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.fitbites.navigation.ROUTE_ACTIVITY_LEVEL
 
 @Composable
 fun GenderScreen(
@@ -22,7 +23,7 @@ fun GenderScreen(
         },
         onNextClicked = {
             Log.d("USER_PROFILE", "User profile: ${viewModel.userProfile.value}")
-            navController.navigate("active")
+            navController.navigate(ROUTE_ACTIVITY_LEVEL)
         }
     )
 }

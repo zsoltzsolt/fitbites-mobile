@@ -19,7 +19,9 @@ val Poppins = FontFamily(
 
 val Inter = FontFamily(
     listOf(
-        Font(resId = R.font.inter_regular, weight = FontWeight.Normal)
+        Font(resId = R.font.inter_regular, weight = FontWeight.Normal),
+        Font(resId = R.font.inter_semi_bold, weight = FontWeight.SemiBold),
+        Font(resId = R.font.inter_light, weight = FontWeight.Light)
     )
 )
 
@@ -33,14 +35,14 @@ val Typography = Typography(
         letterSpacing = 0.5.sp
     ),
     headlineLarge = TextStyle(
-        fontFamily = Poppins,
-        fontWeight = FontWeight.SemiBold,
+        fontFamily = Inter,
+        fontWeight = FontWeight.Normal,
         fontSize = 36.sp
     ),
     headlineSmall = TextStyle(
-        fontFamily = Poppins,
+        fontFamily = Inter,
         fontWeight = FontWeight.Light,
-        fontSize = 18.sp
+        fontSize = 16.sp
     ),
     headlineMedium = TextStyle(
         fontFamily = Inter,

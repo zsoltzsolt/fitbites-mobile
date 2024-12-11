@@ -26,8 +26,8 @@ class AuthViewModel @Inject constructor(
     var isUserAuthenticatedState = mutableStateOf(false)
         private set
 
-    private val _isSetupComplete = MutableStateFlow(false)
-    val isSetupComplete: StateFlow<Boolean> get() = _isSetupComplete
+    var isSetupComplete = mutableStateOf(false)
+        private set
 
 
     init {
@@ -171,7 +171,7 @@ class AuthViewModel @Inject constructor(
                     is Response.Loading -> {}
                     is Response.Success -> {
                         Log.d("USER_PROFILE", response.toString())
-                        _isSetupComplete.value = response.data
+                        isSetupComplete.value = response.data
                     }
                     is Response.Error -> {}
                 }

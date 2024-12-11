@@ -21,14 +21,14 @@ fun GradientButton(
     modifier: Modifier = Modifier,
     colors: List<Color> = listOf(Color(0xFF32CD32), Color(0xFF228B22)),
     textColor: Color = Color.White,
-    textSize: Int = 18
+    textSize: Int = 16
 ) {
     Button(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(Color.Transparent),
         modifier = modifier
             .fillMaxWidth()
-            .height(50.dp)
+            .height(44.dp)
             .background(
                 brush = Brush.horizontalGradient(colors),
                 shape = RoundedCornerShape(50)

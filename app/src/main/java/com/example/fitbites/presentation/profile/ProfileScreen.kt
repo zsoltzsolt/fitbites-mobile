@@ -23,22 +23,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.fitbites.R
 import com.example.fitbites.domain.profile.model.UserProfile
 import com.example.fitbites.navigation.ROUTE_LOGIN
 import com.example.fitbites.presentation.auth.AuthViewModel
-import com.example.fitbites.presentation.splash.SplashScreen
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
 import com.example.fitbites.utils.Response
 

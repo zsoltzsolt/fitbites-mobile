@@ -43,20 +43,16 @@ fun AuthHeader(
 
         Text(
             text = title,
-            style = TextStyle(
-                color = MaterialTheme.colorScheme.onPrimary,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Bold
-            ),
+            color = MaterialTheme.colorScheme.onPrimary,
+            style = MaterialTheme.typography.headlineLarge,
             textAlign = TextAlign.Center
         )
 
         Text(
             text = subtitle,
-            style = TextStyle(
-                color = Color.Gray,
-                fontSize = 14.sp
-            ),
+            color = MaterialTheme.colorScheme.onPrimary,
+            style = MaterialTheme.typography.headlineSmall,
+            fontSize = 13.sp,
             textAlign = TextAlign.Center
         )
     }

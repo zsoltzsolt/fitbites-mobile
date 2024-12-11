@@ -54,7 +54,7 @@ fun YearsSelectionScreen(
                     Log.d("USER_PROFILE", "User profile: ${viewModel.userProfile.value}")
                     navController.navigate("weight")
                 },
-                modifier = Modifier.padding(horizontal = 30.dp)
+                modifier = Modifier.padding(horizontal = 30.dp, vertical = 30.dp)
             )
         }
     }

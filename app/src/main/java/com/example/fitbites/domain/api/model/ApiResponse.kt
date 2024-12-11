@@ -17,6 +17,5 @@ data class TotalMeal(
     val Carbs: Double,
     val Proteins: Double,
     val Calories: Double,
-    val Fats: Double,
-    val grams: Int
+    val Fats: Double
 )

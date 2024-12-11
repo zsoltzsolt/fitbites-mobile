@@ -64,10 +64,10 @@ fun Dashboard(
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
             SummaryCard(
-                proteins = 150 to (userProfile?.dailyMacronutrientsGoal?.protein ?: 0),
+                proteins = 60 to (userProfile?.dailyMacronutrientsGoal?.protein ?: 0),
                 fats = 30 to (userProfile?.dailyMacronutrientsGoal?.fats ?: 0),
-                carbs = 319 to (userProfile?.dailyMacronutrientsGoal?.carbs ?: 0),
-                calories = 2456 to (userProfile?.dailyMacronutrientsGoal?.calories ?: 0)
+                carbs = 100 to (userProfile?.dailyMacronutrientsGoal?.carbs ?: 0),
+                calories = 1000 to (userProfile?.dailyMacronutrientsGoal?.calories ?: 0)
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(

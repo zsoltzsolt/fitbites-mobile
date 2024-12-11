@@ -33,8 +33,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
-
+import com.example.fitbites.presentation.camera.CameraViewModel
 
 @Composable
 fun CameraScreen() {
@@ -42,6 +43,7 @@ fun CameraScreen() {
     val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
 
     var imageCapture by remember { mutableStateOf<ImageCapture?>(null) }
+    val cameraViewModel: CameraViewModel = viewModel()
 
     if (!hasCameraPermission(context)) {
         ActivityCompat.requestPermissions(
@@ -78,11 +80,15 @@ fun CameraScreen() {
 
         CaptureButton(onCaptureClick = {
             imageCapture?.let {
-                capturePhoto(it, context)
+                capturePhoto(it, context) { photoFile ->
+                    cameraViewModel.uploadPhoto(photoFile, context)
+                }
             }
         })
+        Text(text = cameraViewModel.uploadStatus.value, modifier = Modifier.align(Alignment.TopCenter))
     }
 }
+
 
 private fun setupCamera(
     cameraProvider: ProcessCameraProvider,
@@ -113,7 +119,7 @@ private fun setupCamera(
     }
 }
 
-private fun capturePhoto(imageCapture: ImageCapture, context: Context) {
+private fun capturePhoto(imageCapture: ImageCapture, context: Context, onPhotoCaptured: (File) -> Unit) {
     val outputFile = File(
         context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
         "photo_${System.currentTimeMillis()}.jpg"
@@ -126,6 +132,7 @@ private fun capturePhoto(imageCapture: ImageCapture, context: Context) {
         ContextCompat.getMainExecutor(context),
         object : ImageCapture.OnImageSavedCallback {
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                onPhotoCaptured(outputFile)
                 Toast.makeText(context, "Photo saved: ${outputFile.absolutePath}", Toast.LENGTH_SHORT).show()
             }
 
@@ -136,6 +143,7 @@ private fun capturePhoto(imageCapture: ImageCapture, context: Context) {
         }
     )
 }
+
 
 private fun hasCameraPermission(context: Context): Boolean {
     return ContextCompat.checkSelfPermission(
@@ -154,7 +162,7 @@ fun CaptureButton(onCaptureClick:() -> Unit) {
                     .align(Alignment.BottomCenter)
                     .fillMaxWidth()
                     .height((0.2f * LocalConfiguration.current.screenHeightDp).dp)
-                    .background(MaterialTheme.colorScheme.background)
+                    .background(Color.Transparent)
             )
 
             Box(

@@ -42,6 +42,7 @@ import androidx.navigation.NavController
 import com.example.fitbites.navigation.ROUTE_ANALYSIS
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
 import com.example.fitbites.presentation.camera.CameraViewModel
+import com.example.fitbites.presentation.shared.LoadingScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
@@ -54,15 +55,16 @@ fun CameraScreen(
     val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
     var imageCapture by remember { mutableStateOf<ImageCapture?>(null) }
     val cameraViewModel: CameraViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+    var isLoading by remember { mutableStateOf(false) }
 
-//    LaunchedEffect(Unit) {
-//        cameraViewModel.uploadStatus.collectLatest { status ->
-//            Log.d("UploadStatus", "Current status: $status")
-//            if (status == "Upload successful") {
-//                navController.navigate(ROUTE_ANALYSIS)
-//            }
-//        }
-//    }
+    LaunchedEffect(Unit) {
+        cameraViewModel.uploadStatus.collectLatest { status ->
+            Log.d("UploadStatus", "Current status: $status")
+            if (status == "Upload successful") {
+                navController.navigate(ROUTE_ANALYSIS)
+            }
+        }
+    }
 
     if (!hasCameraPermission(context)) {
         ActivityCompat.requestPermissions(
@@ -111,10 +113,13 @@ fun CameraScreen(
             imageCapture?.let {
                 capturePhoto(it, context) { photoFile ->
                     cameraViewModel.uploadPhoto(photoFile, context)
-                    navController.navigate(ROUTE_ANALYSIS)
+                    isLoading = true
                 }
             }
         })
+        if (isLoading) {
+            LoadingScreen()
+        }
     }
 }
 

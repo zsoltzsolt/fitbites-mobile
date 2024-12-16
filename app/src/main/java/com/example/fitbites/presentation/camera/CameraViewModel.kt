@@ -2,16 +2,12 @@ package com.example.fitbites.presentation.camera
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fitbites.domain.api.model.ApiResponse
-import com.example.fitbites.domain.api.model.Ingredient
-import com.example.fitbites.domain.api.model.TotalMeal
-import com.example.fitbites.domain.api.usecase.ApiUseCases
-import com.example.fitbites.domain.dashboard.usecase.DashboardUseCases
-import com.example.fitbites.domain.profile.model.UserProfile
-import com.example.fitbites.network.RetrofitInstance
+import com.example.fitbites.domain.nutrition.model.Ingredient
+import com.example.fitbites.domain.nutrition.model.TotalMeal
+import com.example.fitbites.domain.nutrition.usecase.NutritionUseCases
+import com.example.fitbites.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CameraViewModel @Inject constructor(
-    private val cameraUseCases: ApiUseCases
+    private val cameraUseCases: NutritionUseCases
 ) : ViewModel() {
     private val _uploadStatus = MutableStateFlow("Uploading...")
     val uploadStatus = _uploadStatus.asStateFlow()
@@ -67,6 +63,28 @@ class CameraViewModel @Inject constructor(
         }
     }
 
+    fun saveMealWithIngredients(totalMeal: TotalMeal, ingredients: List<Ingredient>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                cameraUseCases.saveMeal(totalMeal, ingredients).collect { response ->
+                    when (response) {
+                        is Response.Success -> {
+                            Log.d("SaveMeal", "Meal and ingredients saved successfully.")
+                        }
+                        is Response.Error -> {
+                            Log.e("SaveMeal", "Error saving meal: ${response.message}")
+                        }
+
+                        Response.Loading -> {
+
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("SaveMeal", "Exception occurred: $e")
+            }
+        }
+    }
 
 
 }

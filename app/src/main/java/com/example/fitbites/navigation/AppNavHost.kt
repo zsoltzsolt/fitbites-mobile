@@ -12,8 +12,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.fitbites.domain.api.model.Ingredient
-import com.example.fitbites.domain.api.model.TotalMeal
 
 import com.example.fitbites.presentation.auth.LoginScreen
 import com.example.fitbites.presentation.auth.SignUpScreen
@@ -125,7 +123,7 @@ fun AppNavHost(
             composable(ROUTE_ANALYSIS){
 
                 FitbitesmobileTheme(dynamicColor = false) {
-                    FoodAnalysisScreen()
+                    FoodAnalysisScreen(navController)
                 }
             }
 

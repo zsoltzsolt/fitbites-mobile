@@ -1,7 +1,6 @@
 package com.example.fitbites.network
 
-import com.example.fitbites.domain.api.model.ApiResponse
-import kotlinx.coroutines.flow.Flow
+import com.example.fitbites.domain.nutrition.model.ApiResponse
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Multipart

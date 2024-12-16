@@ -1,4 +1,4 @@
-package com.example.fitbites.domain.api.model
+package com.example.fitbites.domain.nutrition.model
 
 data class Ingredient(
     val name: String,

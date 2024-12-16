@@ -23,24 +23,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.fitbites.domain.api.model.Ingredient
-import com.example.fitbites.domain.api.model.TotalMeal
+import com.example.fitbites.domain.nutrition.model.Ingredient
+import com.example.fitbites.domain.nutrition.model.TotalMeal
 import com.example.fitbites.presentation.camera.CameraViewModel
 import com.example.fitbites.presentation.components.GradientButton
-import com.example.fitbites.ui.theme.FitbitesmobileTheme
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import com.example.fitbites.navigation.ROUTE_ANALYSIS
+import androidx.navigation.NavController
+import com.example.fitbites.navigation.ROUTE_DASHBOARD
 import kotlinx.coroutines.flow.collectLatest
 
 
 @Composable
-fun FoodAnalysisScreen() {
+fun FoodAnalysisScreen(
+    navController: NavController
+) {
     val viewModel: CameraViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
     val totalMeal by viewModel.totalMeal.collectAsState()
     val ingredients by viewModel.ingredients.collectAsState()
@@ -56,7 +56,7 @@ fun FoodAnalysisScreen() {
     when {
         totalMeal == null -> Text("Loading meal data...")
         ingredients.isEmpty() -> Text("No ingredients found.")
-        else -> FoodAnalysisContent(totalMeal!!, ingredients)
+        else -> FoodAnalysisContent(totalMeal!!, ingredients, viewModel, navController)
     }
 }
 
@@ -64,7 +64,7 @@ fun FoodAnalysisScreen() {
 
 
 @Composable
-fun FoodAnalysisContent(summary: TotalMeal, ingredients: List<Ingredient>) {
+fun FoodAnalysisContent(summary: TotalMeal, ingredients: List<Ingredient>, viewModel: CameraViewModel, navController: NavController) {
     val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
@@ -121,7 +121,10 @@ fun FoodAnalysisContent(summary: TotalMeal, ingredients: List<Ingredient>) {
 
         GradientButton(
             "Track meal",
-            {},
+            {
+                viewModel.saveMealWithIngredients(summary, ingredients)
+                navController.navigate(ROUTE_DASHBOARD)
+            },
             modifier = Modifier.padding(horizontal = 30.dp, vertical = 30.dp)
         )
     }

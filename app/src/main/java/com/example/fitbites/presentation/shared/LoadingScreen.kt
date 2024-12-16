@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,24 +40,36 @@ fun LoadingScreen(
     )
 
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
-            .wrapContentSize(Alignment.Center)
     ) {
         Box(
             modifier = Modifier
-                .size(150.dp)
-                .graphicsLayer {
-                    scaleX = progress.value
-                    scaleY = progress.value
-                    alpha = 1f - progress.value
-                }
-                .border(
-                    width = 8.dp,
-                    color = color,
-                    shape = CircleShape
-                )
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.6f))
+                .blur(10.dp)
         )
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(Alignment.Center)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(150.dp)
+                    .graphicsLayer {
+                        scaleX = progress.value
+                        scaleY = progress.value
+                        alpha = 1f - progress.value
+                    }
+                    .border(
+                        width = 8.dp,
+                        color = color,
+                        shape = CircleShape
+                    )
+            )
+        }
     }
 }
 
@@ -67,3 +80,4 @@ private fun LoadingScreenPreview() {
         LoadingScreen()
     }
 }
+

@@ -1,5 +1,7 @@
 package com.example.fitbites.di
 
+import com.example.fitbites.domain.api.usecase.ApiUseCases
+import com.example.fitbites.domain.api.usecase.UploadImage
 import com.example.fitbites.repository.auth.AuthRepositoryImpl
 import com.example.fitbites.domain.auth.repository.AuthRepository
 import com.example.fitbites.domain.auth.usecase.AuthUseCases
@@ -25,6 +27,7 @@ import com.example.fitbites.domain.profile.usecase.DeleteProfile
 import com.example.fitbites.domain.profile.usecase.FetchProfile
 import com.example.fitbites.domain.profile.usecase.ProfileUseCases
 import com.example.fitbites.domain.profile.usecase.UpdateProfile
+import com.example.fitbites.repository.ApiRepository
 import com.example.fitbites.repository.dashboard.DashboardRepositoryImpl
 import com.example.fitbites.repository.profile.ProfileRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
@@ -64,6 +67,12 @@ object AppModule {
     ): DashboardRepository = DashboardRepositoryImpl(auth, firestore)
 
     @Provides
+    fun provideApiRepository(): ApiRepository {
+        return ApiRepository()
+    }
+
+
+    @Provides
     fun provideAuthScreenUseCase(authRepository: AuthRepository) = AuthUseCases(
         isUserAuthenticated = IsUserAuthenticated(authRepository),
         isSetupCompleted = IsSetupCompleted(authRepository),
@@ -93,6 +102,14 @@ object AppModule {
             decrementDailyWaterIntake = DecrementDailyWaterIntake(repository),
             getCurrentWaterIntake = GetCurrentWaterIntake(repository)
         )
+    }
+
+    @Provides
+    fun provideApiUseCases(repository: ApiRepository): ApiUseCases {
+        return ApiUseCases(
+            uploadImage = UploadImage(repository)
+        )
+
     }
 
 }

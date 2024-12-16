@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import java.io.File
 import java.util.concurrent.ExecutionException
 import android.Manifest
+import android.nfc.Tag
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -33,17 +34,35 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.example.fitbites.navigation.ROUTE_ANALYSIS
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
 import com.example.fitbites.presentation.camera.CameraViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun CameraScreen() {
+fun CameraScreen(
+    navController: NavController,
+    ) {
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
-
     var imageCapture by remember { mutableStateOf<ImageCapture?>(null) }
-    val cameraViewModel: CameraViewModel = viewModel()
+    val cameraViewModel: CameraViewModel = hiltViewModel(LocalContext.current as ComponentActivity)
+
+//    LaunchedEffect(Unit) {
+//        cameraViewModel.uploadStatus.collectLatest { status ->
+//            Log.d("UploadStatus", "Current status: $status")
+//            if (status == "Upload successful") {
+//                navController.navigate(ROUTE_ANALYSIS)
+//            }
+//        }
+//    }
 
     if (!hasCameraPermission(context)) {
         ActivityCompat.requestPermissions(
@@ -64,8 +83,14 @@ fun CameraScreen() {
         return
     }
 
+    DisposableEffect(Unit) {
+        onDispose {
+            releaseCamera(cameraProvider)
+        }
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
-        val previewView = PreviewView(context).apply {
+        val previewView = remember { PreviewView(context) }.apply {
             implementationMode = PreviewView.ImplementationMode.COMPATIBLE
         }
 
@@ -74,7 +99,11 @@ fun CameraScreen() {
             modifier = Modifier.fillMaxSize()
         )
 
-        setupCamera(cameraProvider, context, previewView) { capture ->
+        setupCamera(
+            cameraProvider = cameraProvider,
+            lifecycleOwner = lifecycleOwner, // Pass lifecycleOwner
+            previewView = previewView
+        ) { capture ->
             imageCapture = capture
         }
 
@@ -82,17 +111,26 @@ fun CameraScreen() {
             imageCapture?.let {
                 capturePhoto(it, context) { photoFile ->
                     cameraViewModel.uploadPhoto(photoFile, context)
+                    navController.navigate(ROUTE_ANALYSIS)
                 }
             }
         })
-        Text(text = cameraViewModel.uploadStatus.value, modifier = Modifier.align(Alignment.TopCenter))
+    }
+}
+
+
+private fun releaseCamera(cameraProvider: ProcessCameraProvider) {
+    try {
+        cameraProvider.unbindAll()
+    } catch (e: Exception) {
+        Log.e("ReleaseCamera", "Failed to release camera", e)
     }
 }
 
 
 private fun setupCamera(
     cameraProvider: ProcessCameraProvider,
-    context: Context,
+    lifecycleOwner: LifecycleOwner, // Pass lifecycleOwner instead of using LocalContext
     previewView: PreviewView,
     onImageCaptureReady: (ImageCapture) -> Unit
 ) {
@@ -105,8 +143,9 @@ private fun setupCamera(
     try {
         cameraProvider.unbindAll()
 
+        // Use the provided lifecycleOwner instead of LocalContext
         cameraProvider.bindToLifecycle(
-            context as ComponentActivity,
+            lifecycleOwner,
             CameraSelector.DEFAULT_BACK_CAMERA,
             preview,
             capture
@@ -118,6 +157,7 @@ private fun setupCamera(
         Log.e("setupCamera", "Use case binding failed", e)
     }
 }
+
 
 private fun capturePhoto(imageCapture: ImageCapture, context: Context, onPhotoCaptured: (File) -> Unit) {
     val outputFile = File(

@@ -44,9 +44,10 @@ fun IngredientItem(ingredient: Ingredient) {
             ) {
                 Column {
                     Text(
-                        text = "Ingredient",
+                        text = "${ingredient.name}",
                         color = MaterialTheme.colorScheme.onPrimary,
-                        style = MaterialTheme.typography.headlineSmall
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontSize = 14.sp
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(

@@ -1,6 +1,7 @@
 package com.example.fitbites.domain.nutrition.repository
 
 import com.example.fitbites.domain.nutrition.model.ApiResponse
+import com.example.fitbites.domain.dashboard.model.DailyNutrition
 import kotlinx.coroutines.flow.Flow
 import okhttp3.MultipartBody
 import retrofit2.Response

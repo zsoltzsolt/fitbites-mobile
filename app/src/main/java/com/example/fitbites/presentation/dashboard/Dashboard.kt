@@ -44,9 +44,11 @@ fun Dashboard(
     val userProfile = getUserProfileFromState(userProfileState)
     val waterIntake by dashboardViewModel.waterIntakeState
     val lastUpdateTime by dashboardViewModel.lastUpdateTime
+    val todayTotalNutrition by dashboardViewModel.todayTotalNutrition
 
     LaunchedEffect(Unit) {
         dashboardViewModel.initializeDailyWaterIntake()
+        dashboardViewModel.fetchTodayTotalNutrition()
     }
 
     Column(
@@ -64,10 +66,10 @@ fun Dashboard(
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
             SummaryCard(
-                proteins = 60 to (userProfile?.dailyMacronutrientsGoal?.protein ?: 0),
-                fats = 30 to (userProfile?.dailyMacronutrientsGoal?.fats ?: 0),
-                carbs = 100 to (userProfile?.dailyMacronutrientsGoal?.carbs ?: 0),
-                calories = 1000 to (userProfile?.dailyMacronutrientsGoal?.calories ?: 0)
+                proteins = todayTotalNutrition.Proteins.toInt()  to (userProfile?.dailyMacronutrientsGoal?.protein ?: 0),
+                fats = todayTotalNutrition.Fats.toInt() to (userProfile?.dailyMacronutrientsGoal?.fats ?: 0),
+                carbs = todayTotalNutrition.Carbs.toInt() to (userProfile?.dailyMacronutrientsGoal?.carbs ?: 0),
+                calories = todayTotalNutrition.Calories.toInt() to (userProfile?.dailyMacronutrientsGoal?.calories ?: 0)
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(

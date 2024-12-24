@@ -4,5 +4,6 @@ data class DashboardUseCases (
     val initializeDailyWaterIntake: InitializeDailyWaterIntake,
     val incrementDailyWaterIntake: IncrementDailyWaterIntake,
     val decrementDailyWaterIntake: DecrementDailyWaterIntake,
-    val getCurrentWaterIntake: GetCurrentWaterIntake
+    val getCurrentWaterIntake: GetCurrentWaterIntake,
+    val fetchTodayTotalNutrition: FetchTodayTotalNutrition
 )

@@ -1,5 +1,6 @@
 package com.example.fitbites.repository.dashboard
 
+import com.example.fitbites.domain.dashboard.model.DailyNutrition
 import com.example.fitbites.domain.dashboard.model.DailyWaterIntake
 import com.example.fitbites.domain.dashboard.repository.DashboardRepository
 import com.example.fitbites.utils.Response
@@ -127,6 +128,52 @@ class DashboardRepositoryImpl @Inject constructor(
             }
         } catch (e: Exception) {
             emit(Response.Error(e.message ?: "Failed to fetch current water intake"))
+        }
+    }
+
+    override suspend fun fetchTodayTotalNutrition(): Flow<Response<DailyNutrition>> = flow {
+        val userId = auth.currentUser?.uid
+        val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
+        if (userId == null) {
+            emit(Response.Error("User not authenticated"))
+            return@flow
+        }
+
+        try {
+            val mealsSnapshot = firestore.collection("users").document(userId)
+                .collection("mealHistory").document(date)
+                .collection("meals")
+                .get()
+                .await()
+
+            var totalCalories = 0.0
+            var totalCarbs = 0.0
+            var totalProteins = 0.0
+            var totalFats = 0.0
+
+            for (mealDoc in mealsSnapshot.documents) {
+                val calories = mealDoc.getDouble("calories") ?: 0.0
+                val carbs = mealDoc.getDouble("carbs") ?: 0.0
+                val proteins = mealDoc.getDouble("proteins") ?: 0.0
+                val fats = mealDoc.getDouble("fats") ?: 0.0
+
+                totalCalories += calories
+                totalCarbs += carbs
+                totalProteins += proteins
+                totalFats += fats
+            }
+
+            val dailyNutrition = DailyNutrition(
+                Calories = totalCalories,
+                Carbs = totalCarbs,
+                Proteins = totalProteins,
+                Fats = totalFats
+            )
+
+            emit(Response.Success(dailyNutrition))
+        } catch (e: Exception) {
+            emit(Response.Error(e.message ?: "Failed to fetch daily nutrition"))
         }
     }
 

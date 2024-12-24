@@ -1,7 +1,5 @@
 package com.example.fitbites.repository.nutrition
 
-
-import com.example.fitbites.domain.dashboard.model.DailyWaterIntake
 import com.example.fitbites.domain.nutrition.model.ApiResponse
 import com.example.fitbites.domain.nutrition.model.Ingredient
 import com.example.fitbites.domain.nutrition.model.TotalMeal
@@ -9,7 +7,6 @@ import com.example.fitbites.domain.nutrition.repository.NutritionRepository
 import com.example.fitbites.network.RetrofitInstance
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
@@ -73,7 +70,6 @@ class NutritionRepositoryImpl @Inject constructor(
             emit(com.example.fitbites.utils.Response.Error(e.message ?: "Failed to save meal"))
         }
     }
-
 
 }
 

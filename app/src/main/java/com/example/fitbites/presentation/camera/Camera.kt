@@ -58,10 +58,11 @@ fun CameraScreen(
     var isLoading by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        cameraViewModel.uploadStatus.collectLatest { status ->
+        cameraViewModel.uploadStatus.collect { status ->
             Log.d("UploadStatus", "Current status: $status")
             if (status == "Upload successful") {
                 navController.navigate(ROUTE_ANALYSIS)
+                cameraViewModel.deleteUploadStatus()
             }
         }
     }

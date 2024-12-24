@@ -167,7 +167,6 @@ class DashboardRepositoryImpl @Inject constructor(
                 val fats = mealDoc.getDouble("fats") ?: 0.0
                 val time = mealDoc.getString("time") ?: "00:00"
 
-                // Determine meal type based on time
                 val hour = time.split(":")[0].toInt()
                 val mealType = when (hour) {
                     in 7..11 -> "Breakfast"
@@ -176,7 +175,6 @@ class DashboardRepositoryImpl @Inject constructor(
                     else -> "Snacks"
                 }
 
-                // Update meal breakdown
                 val currentMealNutrition = mealBreakdown[mealType] ?: DailyNutrition()
                 mealBreakdown[mealType] = currentMealNutrition.copy(
                     Calories = currentMealNutrition.Calories + calories,
@@ -185,14 +183,12 @@ class DashboardRepositoryImpl @Inject constructor(
                     Fats = currentMealNutrition.Fats + fats
                 )
 
-                // Update total nutrition
                 totalCalories += calories
                 totalCarbs += carbs
                 totalProteins += proteins
                 totalFats += fats
             }
 
-            // Create DailyNutritionWithBreakdown object
             val dailyNutritionWithBreakdown = DailyNutritionWithBreakdown(
                 overall = DailyNutrition(
                     Calories = totalCalories,

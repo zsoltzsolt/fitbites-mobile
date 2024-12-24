@@ -32,6 +32,10 @@ class CameraViewModel @Inject constructor(
     private val _ingredients = MutableStateFlow<List<Ingredient>>(emptyList())
     val ingredients = _ingredients.asStateFlow()
 
+    fun deleteUploadStatus() {
+        _uploadStatus.value = ""
+    }
+
     fun uploadPhoto(photoFile: File, context: Context) {
         Log.d("UploadPhoto", "Uploading file: ${photoFile.name}")
         val mediaType = "image/jpeg".toMediaType()

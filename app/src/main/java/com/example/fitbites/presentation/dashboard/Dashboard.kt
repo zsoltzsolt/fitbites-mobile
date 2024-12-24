@@ -44,7 +44,7 @@ fun Dashboard(
     val userProfile = getUserProfileFromState(userProfileState)
     val waterIntake by dashboardViewModel.waterIntakeState
     val lastUpdateTime by dashboardViewModel.lastUpdateTime
-    val todayTotalNutrition by dashboardViewModel.todayTotalNutrition
+    val todayTotalNutritionWithBreakdown by dashboardViewModel.todayTotalNutritionWithBreakdown
 
     LaunchedEffect(Unit) {
         dashboardViewModel.initializeDailyWaterIntake()
@@ -66,10 +66,10 @@ fun Dashboard(
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
             SummaryCard(
-                proteins = todayTotalNutrition.Proteins.toInt()  to (userProfile?.dailyMacronutrientsGoal?.protein ?: 0),
-                fats = todayTotalNutrition.Fats.toInt() to (userProfile?.dailyMacronutrientsGoal?.fats ?: 0),
-                carbs = todayTotalNutrition.Carbs.toInt() to (userProfile?.dailyMacronutrientsGoal?.carbs ?: 0),
-                calories = todayTotalNutrition.Calories.toInt() to (userProfile?.dailyMacronutrientsGoal?.calories ?: 0)
+                proteins = todayTotalNutritionWithBreakdown.overall.Proteins.toInt()  to (userProfile?.dailyMacronutrientsGoal?.protein ?: 0),
+                fats = todayTotalNutritionWithBreakdown.overall.Fats.toInt() to (userProfile?.dailyMacronutrientsGoal?.fats ?: 0),
+                carbs = todayTotalNutritionWithBreakdown.overall.Carbs.toInt() to (userProfile?.dailyMacronutrientsGoal?.carbs ?: 0),
+                calories = todayTotalNutritionWithBreakdown.overall.Calories.toInt() to (userProfile?.dailyMacronutrientsGoal?.calories ?: 0)
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
@@ -113,10 +113,10 @@ fun Dashboard(
                 }
             }
             MealTrackerCard(
-                currentBreakfastCalories = 300f,
-                currentLunchCalories = 450f,
-                currentDinnerCalories = 600f,
-                currentSnacksCalories = 150f,
+                currentBreakfastCalories = todayTotalNutritionWithBreakdown.meals["Breakfast"]?.Calories?.toFloat() ?: 0f,
+                currentLunchCalories = todayTotalNutritionWithBreakdown.meals["Lunch"]?.Calories?.toFloat() ?: 0f,
+                currentDinnerCalories = todayTotalNutritionWithBreakdown.meals["Dinner"]?.Calories?.toFloat() ?: 0f,
+                currentSnacksCalories = todayTotalNutritionWithBreakdown.meals["Snacks"]?.Calories?.toFloat() ?: 0f,
                 breakfastTime = "8:00 AM",
                 lunchTime = "12:00 PM",
                 dinnerTime = "7:00 PM",

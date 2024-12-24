@@ -6,3 +6,4 @@ data class DailyNutrition(
     val Proteins: Double = .0,
     val Fats: Double = .0
 )
+

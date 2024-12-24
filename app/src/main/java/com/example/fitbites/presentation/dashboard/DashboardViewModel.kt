@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.fitbites.domain.dashboard.model.DailyNutrition
+import com.example.fitbites.domain.dashboard.model.DailyNutritionWithBreakdown
 import com.example.fitbites.domain.dashboard.usecase.DashboardUseCases
 import com.example.fitbites.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +24,7 @@ class DashboardViewModel @Inject constructor(
     var waterIntakeState = mutableStateOf(0f)
         private set
 
-    var todayTotalNutrition = mutableStateOf(DailyNutrition())
+    var todayTotalNutritionWithBreakdown = mutableStateOf(DailyNutritionWithBreakdown())
         private set
 
     var lastUpdateTime = mutableStateOf("")
@@ -58,10 +59,11 @@ class DashboardViewModel @Inject constructor(
 
     fun fetchTodayTotalNutrition() {
         viewModelScope.launch {
-            dashboardUseCases.fetchTodayTotalNutrition().collect { response ->
+            dashboardUseCases.fetchTodayTotalNutritionWithBreakdown().collect { response ->
                 when (response) {
                     is Response.Success -> {
-                        todayTotalNutrition.value = response.data
+                        Log.d("RESPONSE!!!", response.data.toString())
+                        todayTotalNutritionWithBreakdown.value = response.data
                     }
                     is Response.Error -> {
                         errorMessage.value = response.message

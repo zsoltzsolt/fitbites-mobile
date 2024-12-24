@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.fitbites.domain.dashboard.model.DailyNutrition
+import com.example.fitbites.domain.dashboard.model.DailyNutritionWithBreakdown
 import com.example.fitbites.domain.dashboard.usecase.DashboardUseCases
 import com.example.fitbites.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +24,9 @@ class DashboardViewModel @Inject constructor(
     var waterIntakeState = mutableStateOf(0f)
         private set
 
+    var todayTotalNutritionWithBreakdown = mutableStateOf(DailyNutritionWithBreakdown())
+        private set
+
     var lastUpdateTime = mutableStateOf("")
         private set
 
@@ -31,6 +36,10 @@ class DashboardViewModel @Inject constructor(
     var errorMessage = mutableStateOf<String?>(null)
         private set
 
+    init {
+        fetchTodayTotalNutrition()
+    }
+
     fun fetchCurrentWaterIntake() {
         viewModelScope.launch {
             dashboardUseCases.getCurrentWaterIntake().collect { response ->
@@ -38,6 +47,23 @@ class DashboardViewModel @Inject constructor(
                     is Response.Success -> {
                         waterIntakeState.value = response.data.waterIntake
                         lastUpdateTime.value = response.data.lastUpdateTime
+                    }
+                    is Response.Error -> {
+                        errorMessage.value = response.message
+                    }
+                    is Response.Loading -> {  }
+                }
+            }
+        }
+    }
+
+    fun fetchTodayTotalNutrition() {
+        viewModelScope.launch {
+            dashboardUseCases.fetchTodayTotalNutritionWithBreakdown().collect { response ->
+                when (response) {
+                    is Response.Success -> {
+                        Log.d("RESPONSE!!!", response.data.toString())
+                        todayTotalNutritionWithBreakdown.value = response.data
                     }
                     is Response.Error -> {
                         errorMessage.value = response.message

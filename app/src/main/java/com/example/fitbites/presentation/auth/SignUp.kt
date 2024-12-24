@@ -151,7 +151,7 @@ fun SignUpScreen(
                     name = it
                     onboardingViewModel.updateName(name) },
                 label = "Full name",
-                trailingIcon = { Icon(Icons.Default.Person, contentDescription = "Name Icon") }
+                trailingIcon = { Icon(Icons.Default.Person, contentDescription = "Name Icon", modifier = Modifier.size(22.dp)) }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -160,7 +160,7 @@ fun SignUpScreen(
                 value = email,
                 onValueChange = { email = it },
                 label = "Email",
-                trailingIcon = { Icon(Icons.Default.Email, contentDescription = "Email Icon") }
+                trailingIcon = { Icon(Icons.Default.Email, contentDescription = "Email Icon", modifier = Modifier.size(22.dp)) }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -248,7 +248,7 @@ fun SignUpScreen(
                 modifier = Modifier.padding(horizontal = 30.dp)
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             SocialMediaSection(
                 onGoogleAuth = {
@@ -270,6 +270,8 @@ fun SignUpScreen(
             )
 
             Spacer(modifier = Modifier.weight(1f))
+
+            Spacer(modifier = Modifier.height(32.dp))
 
             AuthFooter(
                 message = "Already have an account? ",

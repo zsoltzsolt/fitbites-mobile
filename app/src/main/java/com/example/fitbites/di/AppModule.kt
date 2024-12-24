@@ -1,5 +1,7 @@
 package com.example.fitbites.di
 
+import com.example.fitbites.domain.nutrition.usecase.NutritionUseCases
+import com.example.fitbites.domain.nutrition.usecase.UploadImage
 import com.example.fitbites.repository.auth.AuthRepositoryImpl
 import com.example.fitbites.domain.auth.repository.AuthRepository
 import com.example.fitbites.domain.auth.usecase.AuthUseCases
@@ -20,11 +22,13 @@ import com.example.fitbites.domain.dashboard.usecase.DecrementDailyWaterIntake
 import com.example.fitbites.domain.dashboard.usecase.GetCurrentWaterIntake
 import com.example.fitbites.domain.dashboard.usecase.IncrementDailyWaterIntake
 import com.example.fitbites.domain.dashboard.usecase.InitializeDailyWaterIntake
+import com.example.fitbites.domain.nutrition.usecase.SaveMeal
 import com.example.fitbites.domain.profile.repository.ProfileRepository
 import com.example.fitbites.domain.profile.usecase.DeleteProfile
 import com.example.fitbites.domain.profile.usecase.FetchProfile
 import com.example.fitbites.domain.profile.usecase.ProfileUseCases
 import com.example.fitbites.domain.profile.usecase.UpdateProfile
+import com.example.fitbites.repository.nutrition.NutritionRepositoryImpl
 import com.example.fitbites.repository.dashboard.DashboardRepositoryImpl
 import com.example.fitbites.repository.profile.ProfileRepositoryImpl
 import com.google.firebase.auth.FirebaseAuth
@@ -64,6 +68,15 @@ object AppModule {
     ): DashboardRepository = DashboardRepositoryImpl(auth, firestore)
 
     @Provides
+    fun provideApiRepository(
+        auth: FirebaseAuth,
+        firestore: FirebaseFirestore
+    ): NutritionRepositoryImpl {
+        return NutritionRepositoryImpl(auth, firestore)
+    }
+
+
+    @Provides
     fun provideAuthScreenUseCase(authRepository: AuthRepository) = AuthUseCases(
         isUserAuthenticated = IsUserAuthenticated(authRepository),
         isSetupCompleted = IsSetupCompleted(authRepository),
@@ -93,6 +106,15 @@ object AppModule {
             decrementDailyWaterIntake = DecrementDailyWaterIntake(repository),
             getCurrentWaterIntake = GetCurrentWaterIntake(repository)
         )
+    }
+
+    @Provides
+    fun provideApiUseCases(repository: NutritionRepositoryImpl): NutritionUseCases {
+        return NutritionUseCases(
+            uploadImage = UploadImage(repository),
+            saveMeal = SaveMeal(repository)
+        )
+
     }
 
 }

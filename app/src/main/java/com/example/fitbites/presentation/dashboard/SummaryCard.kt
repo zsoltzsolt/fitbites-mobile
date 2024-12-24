@@ -101,7 +101,7 @@ fun NutrientProgress(label: String, current: Int, goal: Int, modifier: Modifier)
             )
         }
         LinearProgressIndicator(
-            progress = (current.toFloat() / goal),
+            progress = if (current > 0) (current.toFloat() / goal) else 0f,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp)

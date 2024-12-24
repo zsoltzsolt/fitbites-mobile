@@ -1,5 +1,6 @@
 package com.example.fitbites.presentation.dashboard
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,15 +14,22 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.CalendarMonth
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,11 +53,25 @@ fun Dashboard(
     val waterIntake by dashboardViewModel.waterIntakeState
     val lastUpdateTime by dashboardViewModel.lastUpdateTime
     val todayTotalNutritionWithBreakdown by dashboardViewModel.todayTotalNutritionWithBreakdown
+    var isDatePickerVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         dashboardViewModel.initializeDailyWaterIntake()
         dashboardViewModel.fetchTodayTotalNutrition()
     }
+
+    if (isDatePickerVisible) {
+        DatePickerModal(
+            onDateSelected = { selectedDate ->
+                println("Selected date: $selectedDate")
+                isDatePickerVisible = false
+            },
+            onDismiss = {
+                isDatePickerVisible = false
+            }
+        )
+    }
+
 
     Column(
         modifier = Modifier
@@ -58,6 +80,22 @@ fun Dashboard(
             .padding(vertical = 26.dp, horizontal = 6.dp)
     ) {
         FitbitesmobileTheme(dynamicColor = false) {
+
+            IconButton(
+                onClick = {
+                    isDatePickerVisible = true
+                },
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(horizontal = 10.dp)
+            ) {
+                Icon(
+                    Icons.Filled.CalendarMonth,
+                    contentDescription = "Calendar",
+                    tint = Color.Green
+                )
+            }
+
             Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = "Summary",
@@ -138,9 +176,38 @@ fun Dashboard(
         )
     }
 }
+
 fun getUserProfileFromState(state: Response<UserProfile>): UserProfile? {
     return when (state) {
         is Response.Success -> state.data
         else -> null
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DatePickerModal(
+    onDateSelected: (Long?) -> Unit,
+    onDismiss: () -> Unit
+) {
+    val datePickerState = rememberDatePickerState()
+
+    DatePickerDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = {
+                onDateSelected(datePickerState.selectedDateMillis)
+                onDismiss()
+            }) {
+                Text("OK")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancel")
+            }
+        }
+    ) {
+        DatePicker(state = datePickerState)
     }
 }

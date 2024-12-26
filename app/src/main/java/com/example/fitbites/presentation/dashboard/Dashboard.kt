@@ -59,6 +59,7 @@ fun Dashboard(
     var isDatePickerVisible by remember { mutableStateOf(false) }
     val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
     var currentDate by remember { mutableStateOf("Today") }
+    var buttonStatus by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
         Log.d("DATE123", date)
@@ -74,10 +75,12 @@ fun Dashboard(
                 dashboardViewModel.fetchTotalNutrition(formattedDate)
                 dashboardViewModel.initializeDailyWaterIntake(formattedDate)
                 isDatePickerVisible = false
-                currentDate = if (formattedDate == SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())) {
-                    "Today"
+                if (formattedDate == SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())) {
+                    currentDate = "Today"
+                    buttonStatus = true
                 } else {
-                    formattedDate
+                    currentDate = formattedDate
+                    buttonStatus = false
                 }
             },
             onDismiss = {
@@ -145,6 +148,7 @@ fun Dashboard(
                 waterIntake,
                 (userProfile?.dailyWaterGoal ?: 2.5).toFloat(),
                 lastUpdateTime,
+                buttonStatus,
                 {dashboardViewModel.incrementDailyWaterIntake()},
                 {dashboardViewModel.decrementDailyWaterIntake()}
             )
@@ -165,7 +169,8 @@ fun Dashboard(
                     modifier = Modifier.padding(horizontal = 25.dp),
                     onClick = {
                         isDialogVisible = true
-                    }
+                    },
+                    enabled = buttonStatus
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,

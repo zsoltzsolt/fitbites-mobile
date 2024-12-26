@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 class GetCurrentWaterIntake(
     private val repository: DashboardRepository
 ) {
-    suspend operator fun invoke(): Flow<Response<DailyWaterIntake>> {
-        return repository.getCurrentWaterIntake()
+    suspend operator fun invoke(date: String): Flow<Response<DailyWaterIntake>> {
+        return repository.getCurrentWaterIntake(date)
     }
 }

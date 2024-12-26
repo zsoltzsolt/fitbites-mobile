@@ -10,7 +10,7 @@ import javax.inject.Inject
 class FetchTodayTotalNutritionWithBreakdown @Inject constructor(
     private val repository: DashboardRepository
 ) {
-    suspend operator fun invoke(): Flow<Response<DailyNutritionWithBreakdown>> {
-        return repository.fetchTodayTotalNutritionWithBreakdown()
+    suspend operator fun invoke(date: String): Flow<Response<DailyNutritionWithBreakdown>> {
+        return repository.fetchTodayTotalNutritionWithBreakdown(date)
     }
 }

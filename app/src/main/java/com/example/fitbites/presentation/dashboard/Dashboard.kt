@@ -1,6 +1,6 @@
 package com.example.fitbites.presentation.dashboard
 
-import androidx.compose.foundation.background
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,6 +39,9 @@ import com.example.fitbites.domain.profile.model.UserProfile
 import com.example.fitbites.presentation.profile.ProfileViewModel
 import com.example.fitbites.ui.theme.FitbitesmobileTheme
 import com.example.fitbites.utils.Response
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun Dashboard(
@@ -54,17 +57,28 @@ fun Dashboard(
     val lastUpdateTime by dashboardViewModel.lastUpdateTime
     val todayTotalNutritionWithBreakdown by dashboardViewModel.todayTotalNutritionWithBreakdown
     var isDatePickerVisible by remember { mutableStateOf(false) }
+    val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+    var currentDate by remember { mutableStateOf("Today") }
 
     LaunchedEffect(Unit) {
-        dashboardViewModel.initializeDailyWaterIntake()
-        dashboardViewModel.fetchTodayTotalNutrition()
+        Log.d("DATE123", date)
+        dashboardViewModel.initializeDailyWaterIntake(date)
+        dashboardViewModel.fetchTotalNutrition(date)
     }
 
     if (isDatePickerVisible) {
         DatePickerModal(
             onDateSelected = { selectedDate ->
-                println("Selected date: $selectedDate")
+                val formattedDate = formatDate(selectedDate)
+                Log.d("DATE123", formattedDate.toString())
+                dashboardViewModel.fetchTotalNutrition(formattedDate)
+                dashboardViewModel.initializeDailyWaterIntake(formattedDate)
                 isDatePickerVisible = false
+                currentDate = if (formattedDate == SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())) {
+                    "Today"
+                } else {
+                    formattedDate
+                }
             },
             onDismiss = {
                 isDatePickerVisible = false
@@ -81,19 +95,30 @@ fun Dashboard(
     ) {
         FitbitesmobileTheme(dynamicColor = false) {
 
-            IconButton(
-                onClick = {
-                    isDatePickerVisible = true
-                },
+            Row(
                 modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(horizontal = 10.dp)
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    Icons.Filled.CalendarMonth,
-                    contentDescription = "Calendar",
-                    tint = Color.Green
+                Text(
+                    text = currentDate,
+                    fontSize = 13.sp,
+                    fontWeight = FontWeight.Normal
                 )
+                IconButton(
+                    onClick = {
+                        isDatePickerVisible = true
+                    },
+                    modifier = Modifier
+                        .padding(horizontal = 10.dp)
+                ) {
+                    Icon(
+                        Icons.Filled.CalendarMonth,
+                        contentDescription = "Calendar",
+                        tint = Color.Green
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -210,4 +235,10 @@ fun DatePickerModal(
     ) {
         DatePicker(state = datePickerState)
     }
+}
+
+fun formatDate(timestamp: Long?): String {
+    if (timestamp == null) return ""
+    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    return sdf.format(timestamp)
 }

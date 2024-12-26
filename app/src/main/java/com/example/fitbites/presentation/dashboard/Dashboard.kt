@@ -59,6 +59,7 @@ fun Dashboard(
     var isDatePickerVisible by remember { mutableStateOf(false) }
     val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
     var currentDate by remember { mutableStateOf("Today") }
+    var currentDateMillis: Long? by remember { mutableStateOf(Date().time) }
     var buttonStatus by remember { mutableStateOf(true) }
 
     LaunchedEffect(Unit) {
@@ -70,6 +71,7 @@ fun Dashboard(
     if (isDatePickerVisible) {
         DatePickerModal(
             onDateSelected = { selectedDate ->
+                currentDateMillis = selectedDate
                 val formattedDate = formatDate(selectedDate)
                 Log.d("DATE123", formattedDate.toString())
                 dashboardViewModel.fetchTotalNutrition(formattedDate)
@@ -85,7 +87,8 @@ fun Dashboard(
             },
             onDismiss = {
                 isDatePickerVisible = false
-            }
+            },
+            currentDateMillis
         )
     }
 
@@ -218,9 +221,12 @@ fun getUserProfileFromState(state: Response<UserProfile>): UserProfile? {
 @Composable
 fun DatePickerModal(
     onDateSelected: (Long?) -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    initialDateMillis: Long?
 ) {
-    val datePickerState = rememberDatePickerState()
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = initialDateMillis
+    )
 
     DatePickerDialog(
         onDismissRequest = onDismiss,

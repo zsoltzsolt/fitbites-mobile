@@ -28,6 +28,7 @@ fun WaterTrackerCard(
     currentWater: Float,
     goalWater: Float,
     lastUpdateTime: String,
+    buttonStatus: Boolean,
     onIncrease: () -> Unit,
     onDecrease: () -> Unit
 ) {
@@ -87,6 +88,7 @@ fun WaterTrackerCard(
                                     IconButton(
                                         onClick = {onIncrease()},
                                         modifier = Modifier.fillMaxSize(),
+                                        enabled = buttonStatus,
                                         content = {
                                             Icon(
                                                 imageVector = Icons.Default.Add,
@@ -109,6 +111,7 @@ fun WaterTrackerCard(
                                     IconButton(
                                         onClick = {onDecrease()},
                                         modifier = Modifier.fillMaxSize(),
+                                        enabled = buttonStatus,
                                         content = {
                                             Icon(
                                                 imageVector = Icons.Default.Remove,

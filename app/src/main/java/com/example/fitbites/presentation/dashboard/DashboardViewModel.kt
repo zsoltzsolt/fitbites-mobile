@@ -4,12 +4,10 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fitbites.domain.dashboard.model.DailyNutrition
 import com.example.fitbites.domain.dashboard.model.DailyNutritionWithBreakdown
 import com.example.fitbites.domain.dashboard.usecase.DashboardUseCases
 import com.example.fitbites.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -36,13 +34,9 @@ class DashboardViewModel @Inject constructor(
     var errorMessage = mutableStateOf<String?>(null)
         private set
 
-    init {
-        fetchTodayTotalNutrition()
-    }
-
-    fun fetchCurrentWaterIntake() {
+    fun fetchCurrentWaterIntake(date: String) {
         viewModelScope.launch {
-            dashboardUseCases.getCurrentWaterIntake().collect { response ->
+            dashboardUseCases.getCurrentWaterIntake(date).collect { response ->
                 when (response) {
                     is Response.Success -> {
                         waterIntakeState.value = response.data.waterIntake
@@ -57,9 +51,9 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    fun fetchTodayTotalNutrition() {
+    fun fetchTotalNutrition(date: String) {
         viewModelScope.launch {
-            dashboardUseCases.fetchTodayTotalNutritionWithBreakdown().collect { response ->
+            dashboardUseCases.fetchTodayTotalNutritionWithBreakdown(date).collect { response ->
                 when (response) {
                     is Response.Success -> {
                         Log.d("RESPONSE!!!", response.data.toString())
@@ -74,7 +68,7 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    fun initializeDailyWaterIntake() {
+    fun initializeDailyWaterIntake(date: String) {
         viewModelScope.launch {
             isLoading.value = true
             dashboardUseCases.initializeDailyWaterIntake().collect { response ->
@@ -84,7 +78,7 @@ class DashboardViewModel @Inject constructor(
                             waterIntakeState.value = 0f
                             lastUpdateTime.value = ""
                         } else {
-                            fetchCurrentWaterIntake()
+                            fetchCurrentWaterIntake(date)
                         }
                     }
                     is Response.Error -> {

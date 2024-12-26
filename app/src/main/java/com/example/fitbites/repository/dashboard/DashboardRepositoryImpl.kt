@@ -105,9 +105,8 @@ class DashboardRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCurrentWaterIntake(): Flow<Response<DailyWaterIntake>> = flow {
+    override suspend fun getCurrentWaterIntake(date: String): Flow<Response<DailyWaterIntake>> = flow {
         val userId = auth.currentUser?.uid ?: return@flow emit(Response.Error("User not authenticated"))
-        val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         val waterIntakeRef = firestore.collection("users").document(userId)
             .collection("waterIntakeHistory").document(date)
 
@@ -132,9 +131,8 @@ class DashboardRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun fetchTodayTotalNutritionWithBreakdown(): Flow<Response<DailyNutritionWithBreakdown>> = flow {
+    override suspend fun fetchTodayTotalNutritionWithBreakdown(date: String): Flow<Response<DailyNutritionWithBreakdown>> = flow {
         val userId = auth.currentUser?.uid
-        val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
         if (userId == null) {
             emit(Response.Error("User not authenticated"))

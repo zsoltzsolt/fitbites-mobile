@@ -10,6 +10,6 @@ interface DashboardRepository {
     suspend fun initializeDailyWaterIntake(): Flow<Response<Boolean>>
     suspend fun incrementDailyWaterIntake(): Flow<Response<Boolean>>
     suspend fun decrementDailyWaterIntake(): Flow<Response<Boolean>>
-    suspend fun getCurrentWaterIntake(): Flow<Response<DailyWaterIntake>>
-    suspend fun fetchTodayTotalNutritionWithBreakdown(): Flow<Response<DailyNutritionWithBreakdown>>
+    suspend fun getCurrentWaterIntake(date: String): Flow<Response<DailyWaterIntake>>
+    suspend fun fetchTodayTotalNutritionWithBreakdown(date: String): Flow<Response<DailyNutritionWithBreakdown>>
 }

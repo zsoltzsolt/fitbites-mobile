@@ -27,6 +27,7 @@ android {
         buildConfigField("String", "GOOGLE_REQUEST_TOKEN", "\"${project.properties["GOOGLE_REQUEST_TOKEN"]}\"")
         buildConfigField("String", "FACEBOOK_CLIENT_TOKEN", "\"${project.properties["FACEBOOK_CLIENT_TOKEN"]}\"")
         buildConfigField("String", "FACEBOOK_APP_ID", "\"${project.properties["FACEBOOK_APP_ID"]}\"")
+        buildConfigField("String", "API_URL", "\"${project.properties["API_URL"]}\"")
     }
 
     buildFeatures {
@@ -68,6 +69,9 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
 
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.3.0")
+
 
     // Arrow
     implementation("io.arrow-kt:arrow-core:1.2.0")
@@ -76,6 +80,17 @@ dependencies {
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Scarlet
+    implementation("com.tinder.scarlet:scarlet:0.1.12")
+    implementation("com.tinder.scarlet:websocket-okhttp:0.1.12")
+    implementation("com.tinder.scarlet:message-adapter-gson:0.1.12")
+    implementation("com.tinder.scarlet:stream-adapter-rxjava2:0.1.12")
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("io.reactivex.rxjava2:rxkotlin:2.4.0")
+
+
+
 
     // Dagger hilt
     implementation("com.google.dagger:hilt-android:2.51.1")
@@ -96,6 +111,10 @@ dependencies {
     implementation("androidx.camera:camera-extensions:$cameraxVersion")
 
     implementation("com.google.guava:guava:31.1-android")
+
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

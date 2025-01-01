@@ -86,7 +86,7 @@ fun ChatHeader(
             }
         }
         Spacer(modifier = Modifier.weight(1f))
-        IconButton(onClick = { /* Handle more options click */ }) {
+        IconButton(onClick = {  }) {
             Icon(
                 imageVector = Icons.Default.MoreVert,
                 contentDescription = "More Options"

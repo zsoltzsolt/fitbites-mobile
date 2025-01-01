@@ -72,6 +72,8 @@ dependencies {
     // Coil
     implementation("io.coil-kt:coil-compose:2.3.0")
 
+    // Markdown
+    implementation("io.noties.markwon:core:4.6.2")
 
     // Arrow
     implementation("io.arrow-kt:arrow-core:1.2.0")
